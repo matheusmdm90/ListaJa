@@ -79,7 +79,12 @@ export default function Index() {
 
       <View style={styles.cadastro}>
         <Text style={styles.textoCadastro1}>Não tem uma conta?</Text>
-        <Text style={styles.textoCadastro2}>Cadastre-se</Text>
+        <Text
+          style={styles.textoCadastro2}
+          onPress={() => router.push("/Cadastro")}
+        >
+          Cadastre-se
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
   },
 
   boxInput: {
-    width: 294,
+    width: 350,
     height: 56,
     borderWidth: 1,
     borderRadius: 99,
@@ -131,7 +136,8 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 220,
+    width: 260,
+    height: 56,
     fontSize: 16,
     color: "#ffff",
   },
@@ -186,7 +192,7 @@ const styles = StyleSheet.create({
 
   cadastro: {
     flexDirection: "row",
-    marginTop: 50,
+    marginTop: 32,
     gap: 4,
   },
 
