@@ -9,7 +9,7 @@ const Cadastro = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Pressable style={styles.btnBack}>
+        <Pressable style={styles.btnBack} onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={16} color={"#FFFFFF"} />
         </Pressable>
 

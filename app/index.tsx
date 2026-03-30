@@ -72,7 +72,7 @@ export default function Index() {
           Esqueceu a senha?
         </Text>
       </View>
-      <Pressable style={styles.btn}>
+      <Pressable style={styles.btn} onPress={() => router.push("/(tabs)/Home")}>
         <Text style={styles.btnText}>Entrar </Text>
         <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
       </Pressable>

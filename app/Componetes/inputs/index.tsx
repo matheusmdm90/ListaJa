@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface inputs {
-  nomeInput: string;
+  nomeInput?: string;
   placeholder: string;
   IconName?: string;
 }
@@ -22,7 +22,7 @@ const Inputs = ({ placeholder, IconName, nomeInput }: inputs) => {
       <Text style={styles.inputText}>{nomeInput}</Text>
 
       <View style={styles.boxInput}>
-        <MaterialIcons name={IconName} size={20} color={"#FFFFFF30"} />
+        {IconName && <MaterialIcons name={IconName} size={20} color={"#FFFFFF30"} />}
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={"#FFFFFF30"}
