@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
 
   textRestPw: {
     color: "#2559F4",
-    left: 180,
+    left: 220,
     fontSize: 12,
     fontWeight: 400,
   },
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    gap: 8,
+    gap: 2,
     marginTop: 16,
 
     shadowColor: "#2559F4",

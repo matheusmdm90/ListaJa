@@ -1,9 +1,18 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "../Componetes/inputs";
 
 const HomePage = () => {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -23,28 +32,44 @@ const HomePage = () => {
       <View style={{ alignItems: "center" }}>
         <Inputs placeholder="Procure sua lista" IconName="search" />
       </View>
+
       <View style={styles.listaContainer}>
         <View>
           <Text style={styles.textoLista}>Listas</Text>
         </View>
 
-        <View style={styles.boxLista}>
-          <View style={{ flexDirection: "row", gap: 16 }}>
-            <View style={styles.IconBoxLista}>
-              <MaterialIcons name="shopping-cart" color={"#3B82F6"} size={24} />
+        <ScrollView>
+          <Pressable
+            style={styles.boxLista}
+            onPress={() => router.push("/Itens")}
+          >
+            <View style={{ flexDirection: "row", gap: 16 }}>
+              <View style={styles.IconBoxLista}>
+                <MaterialIcons
+                  name="shopping-cart"
+                  color={"#3B82F6"}
+                  size={24}
+                />
+              </View>
+              <View>
+                <Text style={styles.textBoxLista1}> Mercado </Text>
+                <Text style={styles.textBoxLista2}> 01/04/2026</Text>
+              </View>
             </View>
             <View>
-              <Text style={styles.textBoxLista1}> Mercado </Text>
-              <Text style={styles.textBoxLista2}> 01/04/2026</Text>
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={24}
+                color={"#3B82F6"}
+              />
             </View>
-          </View>
-          <View>
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={24}
-              color={"#3B82F6"}
-            />
-          </View>
+          </Pressable>
+        </ScrollView>
+      </View>
+
+      <View style={styles.btnAddPosition}>
+        <View style={styles.btnAdd}>
+          <MaterialIcons name="add" color={"#FFFF"} size={36} />
         </View>
       </View>
     </SafeAreaView>
@@ -126,6 +151,28 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "medium",
     color: "#94A3B8",
+  },
+
+  btnAddPosition: {
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    position: "absolute",
+    bottom: "5%",
+    right: "5%",
+  },
+
+  btnAdd: {
+    backgroundColor: "#3B82F6",
+    width: 56,
+    height: 56,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5, // sombra no Android
+    shadowColor: "#3B82F6", // sombra no iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
 });
 
