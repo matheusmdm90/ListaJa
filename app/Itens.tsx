@@ -66,7 +66,7 @@ const Itens = () => {
             >
               <View>
                 <Text style={styles.textBoxItens2}>UNIDADE</Text>
-                <Text style={styles.textBoxItens1}> Un. 01</Text>
+                <Text style={styles.textBoxItens1}> 01</Text>
               </View>
               <View>
                 <Text style={styles.textBoxItens2}>PREÇO UN.</Text>
