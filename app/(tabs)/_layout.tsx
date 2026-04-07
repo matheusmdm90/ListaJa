@@ -20,6 +20,7 @@ const tabsLayout = () => {
     >
       <Tabs.Screen name="Home" />
       <Tabs.Screen name="Concluidos" />
+      <Tabs.Screen name="Perfil" />
     </Tabs>
   );
 };
