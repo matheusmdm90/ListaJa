@@ -2,6 +2,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ModalItens from "./Componetes/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const Itens = () => {
                 </View>
               </View>
               <View>
-                <MaterialIcons name="more-vert" size={24} color={"#3B82F6"} />
+                <ModalItens />
               </View>
             </View>
 
