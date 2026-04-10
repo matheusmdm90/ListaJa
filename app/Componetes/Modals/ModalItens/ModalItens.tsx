@@ -1,54 +1,103 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 const ModalItens = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={showModal}
+        backdropColor={"#1A1F2E50"}
         onRequestClose={() => {
           setShowModal(!showModal);
         }}
       >
-        <View style={styles.container}>
-          <Pressable onPress={() => setShowModal(!showModal)}>
-            <MaterialIcons name="close" size={24} color={"#3B82F6"} />
-          </Pressable>
-          <View>
-            <View style={styles.BoxICon}>
-              <MaterialIcons name="shopping-cart" size={24} color={"#3B82F6"} />
-            </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "padding"}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                flex: 1,
+              }}
+            >
+              <View style={styles.container}>
+                <Pressable onPress={() => setShowModal(!showModal)}>
+                  <MaterialIcons name="close" size={24} color={"#3B82F6"} />
+                </Pressable>
+                <View style={{ alignItems: "center" }}>
+                  <View style={styles.boxICon}>
+                    <MaterialIcons
+                      name="shopping-cart"
+                      size={24}
+                      color={"#3B82F6"}
+                    />
+                  </View>
 
-            <Text style={styles.Titulo}>Arroz 5kg</Text>
+                  <Text style={styles.titulo}>Arroz 5kg</Text>
 
-            <Text style={styles.TextAux}>Ajuste os detalhes do item</Text>
+                  <Text style={styles.textAux}>Ajuste os detalhes do item</Text>
 
-            <View>
-              <Text>Quantidade</Text>
+                  <View style={{ alignItems: "center", gap: 5, marginTop: 10 }}>
+                    <Text style={styles.textItens}>Quantidade</Text>
 
-              <View>
-                <Text>1</Text>
+                    <View style={styles.boxOpcao}>
+                      <Pressable style={styles.btnMenos}>
+                        <MaterialIcons
+                          name="remove"
+                          size={24}
+                          color={"#FFFF"}
+                        />
+                      </Pressable>
+                      <Text style={styles.textUnd}>1</Text>
+                      <Pressable style={styles.btnMais}>
+                        <MaterialIcons name="add" size={24} color={"#FFFF"} />
+                      </Pressable>
+                    </View>
+                  </View>
+
+                  <View style={{ alignItems: "center", gap: 5, marginTop: 10 }}>
+                    <Text style={styles.textItens}>Preço Unitário</Text>
+
+                    <View style={styles.boxOpcao}>
+                      <Text style={styles.textValue}>R$</Text>
+                      <TextInput
+                        keyboardType="decimal-pad"
+                        placeholder="0,00"
+                        placeholderTextColor={"#FFFFFF30"}
+                        style={styles.input}
+                      />
+                    </View>
+                  </View>
+
+                  <Pressable style={styles.btnConfirmar}>
+                    <Text>Confirmar</Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
-
-            <View>
-              <Text>Preço Unitário</Text>
-
-              <View>
-                <Text>R$</Text>
-              </View>
-            </View>
-
-            <Pressable>
-              <Text>Confirmar</Text>
-            </Pressable>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
 
       <Pressable onPress={() => setShowModal(!showModal)}>
@@ -60,16 +109,16 @@ const ModalItens = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
-    height: "70%",
+    width: 342,
+    height: 584,
     backgroundColor: "#1A1F2E",
     justifyContent: "center",
     alignItems: "center",
-    margin: "auto",
+
     borderRadius: 32,
   },
 
-  BoxICon: {
+  boxICon: {
     width: 64,
     height: 64,
     backgroundColor: "#3B82F620",
@@ -78,15 +127,87 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  Titulo: {
+  titulo: {
     color: "#FFFF",
     fontSize: 24,
     fontWeight: "bold",
   },
 
-  TextAux: {
+  textAux: {
     fontSize: 14,
     color: "#94A3B8",
+  },
+
+  textItens: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#64748B",
+  },
+
+  boxOpcao: {
+    width: 276,
+    height: 74,
+    backgroundColor: "#FFFFFF05",
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: "#FFFFFF10",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 6,
+  },
+
+  btnMenos: {
+    width: 56,
+    height: 56,
+    backgroundColor: "#FFFFFF15",
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textBtn: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#FFFF",
+  },
+
+  btnMais: {
+    width: 56,
+    height: 56,
+    backgroundColor: "#3B82F6",
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textUnd: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#FFFF",
+  },
+  textValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#3B82F6",
+    paddingHorizontal: 21,
+  },
+
+  input: {
+    width: 190,
+    fontSize: 24,
+    color: "#ffff",
+    fontWeight: "bold",
+  },
+
+  btnConfirmar: {
+    width: 279,
+    height: 68,
+    backgroundColor: "#3B82F6",
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 32,
   },
 });
 
