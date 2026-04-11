@@ -1,11 +1,13 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ModalItens from "./Componetes/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
   const router = useRouter();
+  const [modalItem, setModalItem] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -30,7 +32,10 @@ const Itens = () => {
 
       <View style={{ width: "100%", height: "85%" }}>
         <ScrollView>
-          <Pressable style={styles.boxItens}>
+          <Pressable
+            style={styles.boxItens}
+            onPress={() => setModalItem(!modalItem)}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -52,9 +57,7 @@ const Itens = () => {
                   <Text style={styles.textBoxItens2}> Não comprado</Text>
                 </View>
               </View>
-              <View>
-                <ModalItens />
-              </View>
+              <View></View>
             </View>
 
             <View
@@ -66,8 +69,15 @@ const Itens = () => {
               }}
             >
               <View>
-                <Text style={styles.textBoxItens2}>UNIDADE</Text>
-                <Text style={styles.textBoxItens1}> 01</Text>
+                <View style={styles.boxUnidade}>
+                  <Pressable style={styles.btnBoxUnidade}>
+                    <MaterialIcons name="remove" size={14} color={"#F1F5F9"} />
+                  </Pressable>
+                  <Text style={styles.textBoxItens1}> 01</Text>
+                  <Pressable style={styles.btnBoxUnidade}>
+                    <MaterialIcons name="add" size={14} color={"#F1F5F9"} />
+                  </Pressable>
+                </View>
               </View>
               <View>
                 <Text style={styles.textBoxItens2}>PREÇO UN.</Text>
@@ -95,6 +105,10 @@ const Itens = () => {
         <View style={styles.btnAdd}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
         </View>
+        <ModalItens
+          visible={modalItem}
+          onRequestClose={() => setModalItem(false)}
+        />
       </View>
     </SafeAreaView>
   );
@@ -169,6 +183,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "medium",
     color: "#94A3B8",
+  },
+
+  boxUnidade: {
+    width: 115,
+    height: 42,
+    flexDirection: "row",
+    backgroundColor: "#00000020",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 100,
+    padding: 5,
+  },
+
+  btnBoxUnidade: {
+    width: 32,
+    height: 32,
+    borderRadius: 100,
+    backgroundColor: "#FFFFFF10",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   abaTotal: {

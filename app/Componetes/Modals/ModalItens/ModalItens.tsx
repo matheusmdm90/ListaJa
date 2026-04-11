@@ -1,5 +1,4 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,19 +12,20 @@ import {
   View,
 } from "react-native";
 
-const ModalItens = () => {
-  const [showModal, setShowModal] = useState(false);
+interface ModalProps {
+  visible: boolean;
+  onRequestClose?: () => void;
+}
 
+const ModalItens = ({ visible, onRequestClose }: ModalProps) => {
   return (
     <View style={{ flex: 1 }}>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={false}
-        visible={showModal}
+        onRequestClose={onRequestClose}
+        visible={visible}
         backdropColor={"#1A1F2E50"}
-        onRequestClose={() => {
-          setShowModal(!showModal);
-        }}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "padding"}
@@ -49,7 +49,7 @@ const ModalItens = () => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Pressable onPress={() => setShowModal(!showModal)}>
+                  <Pressable onPress={onRequestClose}>
                     <MaterialIcons name="close" size={24} color={"#3B82F6"} />
                   </Pressable>
                 </View>
@@ -108,10 +108,6 @@ const ModalItens = () => {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </Modal>
-
-      <Pressable onPress={() => setShowModal(!showModal)}>
-        <MaterialIcons name="more-vert" size={24} color={"#3B82F6"} />
-      </Pressable>
     </View>
   );
 };
