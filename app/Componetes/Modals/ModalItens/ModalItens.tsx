@@ -42,9 +42,18 @@ const ModalItens = () => {
               }}
             >
               <View style={styles.container}>
-                <Pressable onPress={() => setShowModal(!showModal)}>
-                  <MaterialIcons name="close" size={24} color={"#3B82F6"} />
-                </Pressable>
+                <View
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-end",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Pressable onPress={() => setShowModal(!showModal)}>
+                    <MaterialIcons name="close" size={24} color={"#3B82F6"} />
+                  </Pressable>
+                </View>
+
                 <View style={{ alignItems: "center" }}>
                   <View style={styles.boxICon}>
                     <MaterialIcons
@@ -58,7 +67,7 @@ const ModalItens = () => {
 
                   <Text style={styles.textAux}>Ajuste os detalhes do item</Text>
 
-                  <View style={{ alignItems: "center", gap: 5, marginTop: 10 }}>
+                  <View style={{ alignItems: "center", gap: 5, marginTop: 32 }}>
                     <Text style={styles.textItens}>Quantidade</Text>
 
                     <View style={styles.boxOpcao}>
@@ -76,7 +85,7 @@ const ModalItens = () => {
                     </View>
                   </View>
 
-                  <View style={{ alignItems: "center", gap: 5, marginTop: 10 }}>
+                  <View style={{ alignItems: "center", gap: 5, marginTop: 32 }}>
                     <Text style={styles.textItens}>Preço Unitário</Text>
 
                     <View style={styles.boxOpcao}>
@@ -131,6 +140,7 @@ const styles = StyleSheet.create({
     color: "#FFFF",
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 16,
   },
 
   textAux: {
@@ -139,7 +149,7 @@ const styles = StyleSheet.create({
   },
 
   textItens: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#64748B",
   },
@@ -155,6 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 6,
+    marginTop: 16,
   },
 
   btnMenos: {
