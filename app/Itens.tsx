@@ -3,11 +3,14 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ModalExcluir from "./Componetes/Modals/ModalExcluir/ModalExcluir";
 import ModalItens from "./Componetes/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
   const router = useRouter();
   const [modalItem, setModalItem] = useState(false);
+  const [showMomdalExcluir, setShowModalExcluit] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -26,6 +29,11 @@ const Itens = () => {
         <View>
           <Pressable>
             <MaterialIcons name="more-vert" size={24} color={"#64748B"} />
+            <ModalExcluir
+              visible={showMomdalExcluir}
+              onCancel={() => setShowModalExcluit(false)}
+              onConfirm={() => setShowModalExcluit(false)}
+            />
           </Pressable>
         </View>
       </View>
@@ -57,7 +65,16 @@ const Itens = () => {
                   <Text style={styles.textBoxItens2}> Não comprado</Text>
                 </View>
               </View>
-              <View></View>
+              <View>
+                <Pressable onPress={() => setShowModalExcluit(true)}>
+                  <MaterialIcons name="more-vert" size={24} color={"#64748B"} />
+                  <ModalExcluir
+                    visible={showMomdalExcluir}
+                    onCancel={() => setShowModalExcluit(false)}
+                    onConfirm={() => setShowModalExcluit(false)}
+                  />
+                </Pressable>
+              </View>
             </View>
 
             <View
@@ -88,6 +105,10 @@ const Itens = () => {
                 <Text style={styles.textBoxItens1}> R$ 4,89</Text>
               </View>
             </View>
+            <ModalItens
+              visible={modalItem}
+              onRequestClose={() => setModalItem(false)}
+            />
           </Pressable>
         </ScrollView>
       </View>
@@ -105,10 +126,6 @@ const Itens = () => {
         <View style={styles.btnAdd}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
         </View>
-        <ModalItens
-          visible={modalItem}
-          onRequestClose={() => setModalItem(false)}
-        />
       </View>
     </SafeAreaView>
   );
