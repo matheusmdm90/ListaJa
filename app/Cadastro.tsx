@@ -1,11 +1,22 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "./Componetes/inputs";
 
 const Cadastro = () => {
   const router = useRouter();
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [confirmeEmail, setConfirmeEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmeSenha, setConfirmeSenha] = useState("");
+
+  const criarCadastro = () => {
+    console.log({ nome, email, confirmeEmail, senha, confirmeSenha });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -23,29 +34,43 @@ const Cadastro = () => {
           nomeInput="Nome Completo"
           placeholder="Digite seu nome Completo"
           IconName="person"
+          value={nome}
+          onChangeText={setNome}
         />
 
         <Inputs
           nomeInput="E-mail"
           placeholder="digite teu email"
           IconName="email"
+          value={email}
+          onChangeText={setEmail}
         />
         <Inputs
           nomeInput="Confirme seu E-Mail"
           placeholder="Confirme seu E-Mail"
           IconName="mark-email-read"
+          value={confirmeEmail}
+          onChangeText={setConfirmeEmail}
         />
 
-        <Inputs nomeInput="Senha" placeholder="*******" IconName="lock" />
+        <Inputs
+          nomeInput="Senha"
+          placeholder="*******"
+          IconName="lock"
+          value={senha}
+          onChangeText={setSenha}
+        />
         <Inputs
           nomeInput="Confirme sua senha"
           placeholder="*******"
           IconName="lock-reset"
+          value={confirmeSenha}
+          onChangeText={setConfirmeSenha}
         />
       </View>
 
       <View style={styles.btnContainer}>
-        <Pressable style={styles.btn}>
+        <Pressable style={styles.btn} onPress={criarCadastro}>
           <Text style={styles.btnText}>Cadastrar </Text>
           <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
         </Pressable>

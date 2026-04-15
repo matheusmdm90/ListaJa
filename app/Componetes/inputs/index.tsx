@@ -6,9 +6,17 @@ interface inputs {
   nomeInput?: string;
   placeholder: string;
   IconName?: string;
+  value?: string;
+  onChangeText?: (text: string) => void;
 }
 
-const Inputs = ({ placeholder, IconName, nomeInput }: inputs) => {
+const Inputs = ({
+  placeholder,
+  IconName,
+  nomeInput,
+  value,
+  onChangeText,
+}: inputs) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const isPasswordField =
@@ -22,12 +30,16 @@ const Inputs = ({ placeholder, IconName, nomeInput }: inputs) => {
       <Text style={styles.inputText}>{nomeInput}</Text>
 
       <View style={styles.boxInput}>
-        {IconName && <MaterialIcons name={IconName} size={20} color={"#FFFFFF30"} />}
+        {IconName && (
+          <MaterialIcons name={IconName} size={20} color={"#FFFFFF30"} />
+        )}
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={"#FFFFFF30"}
           style={styles.input}
           secureTextEntry={isPasswordField && !mostrarSenha}
+          value={value}
+          onChangeText={onChangeText}
         />
         {isPasswordField && (
           <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
