@@ -1,5 +1,6 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   Image,
   Pressable,
@@ -10,9 +11,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "../Componetes/inputs";
+import ModalAdicionar from "../Componetes/Modals/ModalAdicionar/ModalAdicionar";
 
 const HomePage = () => {
   const router = useRouter();
+
+  const [showModalADD, setShowModalAdd] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -68,9 +72,14 @@ const HomePage = () => {
       </View>
 
       <View style={styles.btnAddPosition}>
-        <View style={styles.btnAdd}>
+        <Pressable style={styles.btnAdd} onPress={() => setShowModalAdd(true)}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
-        </View>
+        </Pressable>
+        <ModalAdicionar
+          visible={showModalADD}
+          onCancel={() => setShowModalAdd(false)}
+          onCreate={() => setShowModalAdd(false)}
+        />
       </View>
     </SafeAreaView>
   );
