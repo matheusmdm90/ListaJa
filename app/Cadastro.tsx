@@ -1,7 +1,7 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "./Componetes/inputs";
 
@@ -14,6 +14,31 @@ const Cadastro = () => {
   const [confirmeSenha, setConfirmeSenha] = useState("");
 
   const criarCadastro = () => {
+    // Validação de e-mail
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (!email || !emailRegex.test(email)) {
+      Alert.alert("E-mail inválido", "Por favor, insira um e-mail válido.");
+      return;
+    }
+
+    if (email !== confirmeEmail) {
+      Alert.alert("E-mails não conferem", "O e-mail e a confirmação precisam ser iguais.");
+      return;
+    }
+
+    // Validação de senha
+    if (!senha || senha.length < 6) {
+      Alert.alert("Senha inválida", "A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (senha !== confirmeSenha) {
+      Alert.alert("Senhas não conferem", "A senha e a confirmação precisam ser iguais.");
+      return;
+    }
+
+    // Se tudo OK
+    Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
     console.log({ nome, email, confirmeEmail, senha, confirmeSenha });
   };
 
@@ -94,11 +119,11 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: "row", // Linha horizontal
-    alignItems: "center", // Alinha verticalmente
-    justifyContent: "space-between", // Espaço entre os elementos
-    paddingHorizontal: 16, // Espaço nas laterais
-    height: 60, // Altura do header
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "space-between", 
+    paddingHorizontal: 16, 
+    height: 60, 
   },
 
   btnBack: {
