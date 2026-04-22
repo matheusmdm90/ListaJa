@@ -40,10 +40,14 @@ export const fazerCadastro = async ({
 export const CadastrarUsuario = async ({
   nome,
   email,
+  user,
 }: {
   nome: string;
   email: string;
+  user: any;
 }) => {
-  let { data: user, error } = await supabase.from("user").insert([nome, email]);
-  return { user, error };
+  let { data, error } = await supabase
+    .from("user")
+    .insert([{ nome, email, user_id: user?.id }]);
+  return { data, error };
 };

@@ -1,7 +1,9 @@
+import { CadastrarUsuario, fazerCadastro } from "@/utils/requisicao";
+
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View, Alert } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "./Componetes/inputs";
 
@@ -13,7 +15,7 @@ const Cadastro = () => {
   const [senha, setSenha] = useState("");
   const [confirmeSenha, setConfirmeSenha] = useState("");
 
-  const criarCadastro = () => {
+  const criarCadastro = async () => {
     // Validação de e-mail
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email || !emailRegex.test(email)) {
@@ -22,24 +24,66 @@ const Cadastro = () => {
     }
 
     if (email !== confirmeEmail) {
-      Alert.alert("E-mails não conferem", "O e-mail e a confirmação precisam ser iguais.");
+      Alert.alert(
+        "E-mails não conferem",
+        "O e-mail e a confirmação precisam ser iguais.",
+      );
       return;
     }
 
     // Validação de senha
-    if (!senha || senha.length < 6) {
-      Alert.alert("Senha inválida", "A senha deve ter pelo menos 6 caracteres.");
+    if (!senha || senha.length < 8) {
+      Alert.alert(
+        "Senha inválida",
+        "A senha deve ter pelo menos 6 caracteres.",
+      );
       return;
     }
 
     if (senha !== confirmeSenha) {
-      Alert.alert("Senhas não conferem", "A senha e a confirmação precisam ser iguais.");
+      Alert.alert(
+        "Senhas não conferem",
+        "A senha e a confirmação precisam ser iguais.",
+      );
       return;
     }
 
-    // Se tudo OK
-    Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
-    console.log({ nome, email, confirmeEmail, senha, confirmeSenha });
+    try {
+      const { data: usuaruiaSuapa, error } = await fazerCadastro({
+        email: email,
+        password: senha,
+        name: nome,
+      });
+      if (error) {
+        Alert.alert("Erro ao cadastrar", error.message);
+        return;
+      } else {
+        const { error: erroCadastrarUsuario } = await CadastrarUsuario({
+          email: email,
+          nome: nome,
+          user: usuaruiaSuapa.user,
+        });
+        if (erroCadastrarUsuario) {
+          Alert.alert(
+            "Erro ao cadastrar usuario",
+            "Revise seus dados ou usuario ja cadastrado",
+          );
+          return;
+        }
+      }
+
+      Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
+    }
+
+    setConfirmeEmail("");
+    setNome("");
+    setEmail("");
+    setConfirmeSenha("");
+    setSenha("");
+    router.push("/");
   };
 
   return (
@@ -103,7 +147,7 @@ const Cadastro = () => {
 
       <View style={styles.cadastro}>
         <Text style={styles.textoCadastro1}>Ja tem uma Conta?</Text>
-        <Text style={styles.textoCadastro2} onPress={() => router.back()}>
+        <Text style={styles.textoCadastro2} onPress={() => router.push("/")}>
           Entrar
         </Text>
       </View>
@@ -119,11 +163,11 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flexDirection: "row", 
-    alignItems: "center", 
-    justifyContent: "space-between", 
-    paddingHorizontal: 16, 
-    height: 60, 
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    height: 60,
   },
 
   btnBack: {
