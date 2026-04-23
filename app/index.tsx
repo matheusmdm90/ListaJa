@@ -1,7 +1,10 @@
+import { useApp } from "@/Contexts/UserApp";
+import { fazerLogin } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   StyleSheet,
@@ -15,6 +18,31 @@ export default function Index() {
   const router = useRouter();
 
   const [mostrarSenha, setMostrarSenha] = useState(true);
+  const [email, setEmail] = useState("");
+  const [senha, setSanha] = useState("");
+  const { dadosLogin } = useApp();
+
+  const login = async () => {
+    try {
+      const { data, error } = await fazerLogin({
+        email,
+        password: senha,
+      });
+      if (error) {
+        Alert.alert("Erro ao Entrar", error.message);
+        return;
+      } else {
+        {
+          Alert.alert("login Efetuado com SUCESSO! ");
+          dadosLogin(data.user);
+          router.push("/(tabs)/Home");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,6 +69,8 @@ export default function Index() {
               placeholderTextColor={"#FFFFFF30"}
               keyboardType="email-address"
               style={styles.input}
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
         </View>
@@ -54,6 +84,8 @@ export default function Index() {
               placeholderTextColor={"#FFFFFF30"}
               style={styles.input}
               secureTextEntry={mostrarSenha}
+              value={senha}
+              onChangeText={setSanha}
             />
             <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
               <MaterialIcons
@@ -72,7 +104,7 @@ export default function Index() {
           Esqueceu a senha?
         </Text>
       </View>
-      <Pressable style={styles.btn} onPress={() => router.push("/(tabs)/Home")}>
+      <Pressable style={styles.btn} onPress={() => login()}>
         <Text style={styles.btnText}>Entrar </Text>
         <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
       </Pressable>
