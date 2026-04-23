@@ -66,7 +66,8 @@ const Cadastro = () => {
         if (erroCadastrarUsuario) {
           Alert.alert(
             "Erro ao cadastrar usuario",
-            "Revise seus dados ou usuario ja cadastrado",
+
+            erroCadastrarUsuario.message,
           );
           return;
         }
