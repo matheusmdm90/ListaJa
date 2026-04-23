@@ -1,3 +1,4 @@
+import { useApp } from "@/Contexts/UserApp";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -15,6 +16,7 @@ import ModalAdicionar from "../Componetes/Modals/ModalAdicionar/ModalAdicionar";
 
 const HomePage = () => {
   const router = useRouter();
+  const { user, listas } = useApp();
 
   const [showModalADD, setShowModalAdd] = useState(false);
   return (
@@ -22,7 +24,9 @@ const HomePage = () => {
       <View style={styles.headerContainer}>
         <View>
           <Text style={styles.headerTexto1}>Minha Lista</Text>
-          <Text style={styles.headerTexto2}>Bem vindo de volta, Matheus </Text>
+          <Text style={styles.headerTexto2}>
+            Bem vindo de volta, {user.user_metadata.name}
+          </Text>
         </View>
 
         <View>
@@ -42,33 +46,39 @@ const HomePage = () => {
           <Text style={styles.textoLista}>Listas</Text>
         </View>
 
-        <ScrollView>
-          <Pressable
-            style={styles.boxLista}
-            onPress={() => router.push("/Itens")}
-          >
-            <View style={{ flexDirection: "row", gap: 16 }}>
-              <View style={styles.IconBoxLista}>
-                <MaterialIcons
-                  name="shopping-cart"
-                  color={"#3B82F6"}
-                  size={24}
-                />
+        {!listas || listas.length === 0 ? (
+          <Text style={styles.listaVazia}>
+            Sua lista está vazia. Que tal adicionar sua primeira Lista?
+          </Text>
+        ) : (
+          <ScrollView>
+            <Pressable
+              style={styles.boxLista}
+              onPress={() => router.push("/Itens")}
+            >
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                <View style={styles.IconBoxLista}>
+                  <MaterialIcons
+                    name="shopping-cart"
+                    color={"#3B82F6"}
+                    size={24}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.textBoxLista1}> Mercado </Text>
+                  <Text style={styles.textBoxLista2}> 01/04/2026</Text>
+                </View>
               </View>
               <View>
-                <Text style={styles.textBoxLista1}> Mercado </Text>
-                <Text style={styles.textBoxLista2}> 01/04/2026</Text>
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  size={24}
+                  color={"#3B82F6"}
+                />
               </View>
-            </View>
-            <View>
-              <MaterialIcons
-                name="keyboard-arrow-right"
-                size={24}
-                color={"#3B82F6"}
-              />
-            </View>
-          </Pressable>
-        </ScrollView>
+            </Pressable>
+          </ScrollView>
+        )}
       </View>
 
       <View style={styles.btnAddPosition}>
@@ -182,6 +192,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
+  },
+
+  listaVazia: {
+    color: "#94A3B8",
+    fontSize: 16,
+    fontWeight: "semibold",
+    marginTop: 20,
+    textAlign: "center",
   },
 });
 
