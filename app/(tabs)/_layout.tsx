@@ -1,6 +1,13 @@
-import { Tabs } from "expo-router";
+import { useApp } from "@/Contexts/UserApp";
+import { Redirect, Tabs } from "expo-router";
 
-const tabsLayout = () => {
+const TabsLayout = () => {
+  const { user } = useApp();
+
+  if (!user) {
+    return <Redirect href="/" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -24,4 +31,4 @@ const tabsLayout = () => {
     </Tabs>
   );
 };
-export default tabsLayout;
+export default TabsLayout;

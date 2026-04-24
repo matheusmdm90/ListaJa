@@ -15,10 +15,14 @@ import Inputs from "../Componetes/inputs";
 import ModalAdicionar from "../Componetes/Modals/ModalAdicionar/ModalAdicionar";
 
 const HomePage = () => {
+  const [showModalADD, setShowModalAdd] = useState(false);
   const router = useRouter();
   const { user, listas } = useApp();
 
-  const [showModalADD, setShowModalAdd] = useState(false);
+  if (!user) {
+    return router.replace("/");
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
