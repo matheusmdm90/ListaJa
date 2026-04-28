@@ -51,9 +51,12 @@ const HomePage = () => {
         </View>
 
         {!listas || listas.length === 0 ? (
-          <Text style={styles.listaVazia}>
-            Sua lista está vazia. Que tal adicionar sua primeira Lista?
-          </Text>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.listaVazia}>Sua lista está vazia.</Text>
+            <Text style={styles.listaVazia}>
+              Que tal adicionar sua primeira Lista?
+            </Text>
+          </View>
         ) : (
           <ScrollView>
             <Pressable
@@ -202,7 +205,7 @@ const styles = StyleSheet.create({
     color: "#94A3B8",
     fontSize: 16,
     fontWeight: "semibold",
-    marginTop: 20,
+
     textAlign: "center",
   },
 });
