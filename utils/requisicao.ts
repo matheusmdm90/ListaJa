@@ -51,3 +51,20 @@ export const CadastrarUsuario = async ({
     .insert([{ nome, email, user_id: user?.id }]);
   return { data, error };
 };
+
+// cria uma lista nova
+
+export const Addlista = async ({
+  usuario_id,
+  nome_Lista,
+  status_lista,
+}: {
+  usuario_id: string;
+  nome_Lista: string;
+  status_lista: string;
+}) => {
+  let { data, error } = await supabase
+    .from("lista")
+    .insert([{ usuario_id, nome_Lista, status_lista }]);
+  return { data, error };
+};

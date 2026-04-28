@@ -1,8 +1,10 @@
 import { useApp } from "@/Contexts/UserApp";
+import { Addlista } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   ScrollView,
@@ -18,10 +20,31 @@ const HomePage = () => {
   const [showModalADD, setShowModalAdd] = useState(false);
   const router = useRouter();
   const { user, listas } = useApp();
+  const status = "Não comprado";
+  const id = "50";
 
   if (!user) {
     return router.replace("/");
   }
+
+  const adicionarLista = async ({ name }: { name: string }) => {
+    try {
+      const { error } = await Addlista({
+        nome_Lista: name,
+        status_lista: status,
+        usuario_id: id,
+      });
+      if (error) {
+        Alert.alert("Erro ao cria lista ", error?.message);
+        return;
+      }
+
+      Alert.alert("Lista Criada com Sucesso");
+      setShowModalAdd(!showModalADD);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,7 +118,7 @@ const HomePage = () => {
         <ModalAdicionar
           visible={showModalADD}
           onCancel={() => setShowModalAdd(false)}
-          onCreate={() => setShowModalAdd(false)}
+          onCreate={(name) => adicionarLista({ name })}
         />
       </View>
     </SafeAreaView>
