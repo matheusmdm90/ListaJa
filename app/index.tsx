@@ -1,5 +1,5 @@
 import { useApp } from "@/Contexts/UserApp";
-import { fazerLogin } from "@/utils/requisicao";
+import { ContaUsuario, fazerLogin } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -31,13 +31,21 @@ export default function Index() {
       if (error) {
         Alert.alert("Erro ao Entrar", error.message);
         return;
-      } else {
-        {
-          Alert.alert("login Efetuado com SUCESSO! ");
-          dadosLogin(data.user);
-          router.push("/(tabs)/Home");
-        }
       }
+      const id = data.user?.id;
+
+      const { data: dadosUser, error: errorDadosUser } = await ContaUsuario({
+        id_usuario: id,
+      });
+      if (errorDadosUser) {
+        Alert.alert("Erro ao Entrar", errorDadosUser.message);
+        console.log(id);
+        return;
+      }
+
+      Alert.alert("login Efetuado com SUCESSO! ");
+      dadosLogin(dadosUser);
+      router.push("/(tabs)/Home");
     } catch (err) {
       console.log(err);
       Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
