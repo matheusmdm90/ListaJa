@@ -1,6 +1,6 @@
 import { supabase } from "./supabase";
 
-// fazer login
+// fazer login auth supabase
 
 export const fazerLogin = async ({
   email,
@@ -13,6 +13,18 @@ export const fazerLogin = async ({
     email: email,
     password: password,
   });
+  return { data, error };
+};
+
+// pegando os dados do usuario
+
+export const ContaUsuario = async ({ id_usuario }: { id_usuario?: string }) => {
+  let { data, error } = await supabase
+    .from("user")
+    .select("*")
+    .eq("user_id", id_usuario)
+    .single();
+
   return { data, error };
 };
 
@@ -66,5 +78,15 @@ export const Addlista = async ({
   let { data, error } = await supabase
     .from("lista")
     .insert([{ usuario_id, nome_Lista, status_lista }]);
+  return { data, error };
+};
+
+// Pegar lista do usuario
+
+export const GetLista = async ({ idUsuario }: { idUsuario: string }) => {
+  let { data, error } = await supabase
+    .from("lista")
+    .select("*")
+    .eq("usuario_id", idUsuario);
   return { data, error };
 };

@@ -1,8 +1,8 @@
 import { useApp } from "@/Contexts/UserApp";
-import { Addlista } from "@/utils/requisicao";
+import { Addlista, GetLista } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   Alert,
   Image,
@@ -17,11 +17,32 @@ import Inputs from "../Componetes/inputs";
 import ModalAdicionar from "../Componetes/Modals/ModalAdicionar/ModalAdicionar";
 
 const HomePage = () => {
+  const [atualizar, setAtualizar] = useState(0);
   const [showModalADD, setShowModalAdd] = useState(false);
   const router = useRouter();
-  const { user, listas } = useApp();
+  const { user, listas, setListas } = useApp();
   const status = "Não comprado";
-  const id = "50";
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!user) return;
+
+      const buscarLista = async () => {
+        const { data: dataLista, error: errorLista } = await GetLista({
+          idUsuario: user.id,
+        });
+
+        if (errorLista) {
+          Alert.alert("Erro ao buscar lista", errorLista?.message);
+        }
+
+        setListas(dataLista ?? []);
+      };
+
+      buscarLista();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [atualizar, user, setListas]),
+  );
 
   if (!user) {
     return router.replace("/");
@@ -32,7 +53,7 @@ const HomePage = () => {
       const { error } = await Addlista({
         nome_Lista: name,
         status_lista: status,
-        usuario_id: id,
+        usuario_id: user.id,
       });
       if (error) {
         Alert.alert("Erro ao cria lista ", error?.message);
@@ -41,6 +62,7 @@ const HomePage = () => {
 
       Alert.alert("Lista Criada com Sucesso");
       setShowModalAdd(!showModalADD);
+      setAtualizar((prev) => prev + 1);
     } catch (err) {
       console.log(err);
     }
@@ -52,7 +74,7 @@ const HomePage = () => {
         <View>
           <Text style={styles.headerTexto1}>Minha Lista</Text>
           <Text style={styles.headerTexto2}>
-            Bem vindo de volta, {user.user_metadata.name}
+            Bem vindo de volta, {user.nome}
           </Text>
         </View>
 
@@ -82,31 +104,34 @@ const HomePage = () => {
           </View>
         ) : (
           <ScrollView>
-            <Pressable
-              style={styles.boxLista}
-              onPress={() => router.push("/Itens")}
-            >
-              <View style={{ flexDirection: "row", gap: 16 }}>
-                <View style={styles.IconBoxLista}>
-                  <MaterialIcons
-                    name="shopping-cart"
-                    color={"#3B82F6"}
-                    size={24}
-                  />
+            {listas.map((lista) => (
+              <Pressable
+                style={styles.boxLista}
+                onPress={() => router.push("/Itens")}
+                key={lista.id}
+              >
+                <View style={{ flexDirection: "row", gap: 16 }}>
+                  <View style={styles.IconBoxLista}>
+                    <MaterialIcons
+                      name="shopping-cart"
+                      color={"#3B82F6"}
+                      size={24}
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.textBoxLista1}>{lista.nome_Lista}</Text>
+                    <Text style={styles.textBoxLista2}>{lista.created_at}</Text>
+                  </View>
                 </View>
                 <View>
-                  <Text style={styles.textBoxLista1}> Mercado </Text>
-                  <Text style={styles.textBoxLista2}> 01/04/2026</Text>
+                  <MaterialIcons
+                    name="keyboard-arrow-right"
+                    size={24}
+                    color={"#3B82F6"}
+                  />
                 </View>
-              </View>
-              <View>
-                <MaterialIcons
-                  name="keyboard-arrow-right"
-                  size={24}
-                  color={"#3B82F6"}
-                />
-              </View>
-            </Pressable>
+              </Pressable>
+            ))}
           </ScrollView>
         )}
       </View>
@@ -172,7 +197,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#FFFFFF15",
     borderRadius: 16,
-    marginTop: 16,
+    marginTop: 13,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
