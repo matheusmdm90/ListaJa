@@ -34,6 +34,7 @@ const HomePage = () => {
 
         if (errorLista) {
           Alert.alert("Erro ao buscar lista", errorLista?.message);
+          return;
         }
 
         setListas(dataLista ?? []);
@@ -107,7 +108,16 @@ const HomePage = () => {
             {listas.map((lista) => (
               <Pressable
                 style={styles.boxLista}
-                onPress={() => router.push("/Itens")}
+                onPress={() =>
+                  router.push({
+                    pathname: "/Itens",
+                    params: {
+                      idLista: lista.id,
+                      nomeLista: lista.nome_Lista,
+                      dataCriacao: lista.created_at,
+                    },
+                  })
+                }
                 key={lista.id}
               >
                 <View style={{ flexDirection: "row", gap: 16 }}>

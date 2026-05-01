@@ -90,3 +90,31 @@ export const GetLista = async ({ idUsuario }: { idUsuario: string }) => {
     .eq("usuario_id", idUsuario);
   return { data, error };
 };
+
+// buscar o itens da lista
+
+export const GetItensLista = async ({ idDaLista }: { idDaLista: string }) => {
+  let { data, error } = await supabase
+    .from("item")
+    .select("*")
+    .eq("lista_id", idDaLista);
+
+  return { data, error };
+};
+
+// adicionat item
+
+export const AddItem = async ({
+  nome_item,
+  lista_id,
+  status_item,
+}: {
+  nome_item: string;
+  lista_id: string;
+  status_item: string;
+}) => {
+  let { data, error } = await supabase
+    .from("item")
+    .insert([{ nome_item, lista_id, status_item }]);
+  return { data, error };
+};
