@@ -1,15 +1,84 @@
+import { AddItem, GetItensLista } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ModalAdicionar from "./Componetes/Modals/ModalAdicionar/ModalAdicionar";
 import ModalExcluir from "./Componetes/Modals/ModalExcluir/ModalExcluir";
 import ModalItens from "./Componetes/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
+  type dadosItensType = {
+    id: string;
+    created_at: string;
+    nome_item: string;
+    quantidade?: number;
+    valor_item?: number;
+    lista_id: string;
+    status_item: string;
+  };
+
   const router = useRouter();
+  const [showModalAdd, setShowModalAdd] = useState(false);
   const [modalItem, setModalItem] = useState(false);
   const [showMomdalExcluir, setShowModalExcluit] = useState(false);
+  const [atualizar, setAtualizar] = useState(0);
+  const [itens, setItens] = useState<dadosItensType[]>();
+  const { idLista, nomeLista, dataCriacao } = useLocalSearchParams<{
+    idLista: string;
+    nomeLista: string;
+    dataCriacao: string;
+  }>();
+  useFocusEffect(
+    useCallback(
+      () => {
+        console.log(idLista);
+        try {
+          const buscarIntens = async () => {
+            const { data: dataItens, error: errorDataItens } =
+              await GetItensLista({
+                idDaLista: idLista,
+              });
+            if (errorDataItens) {
+              Alert.alert("Erro ao buscar Itens", errorDataItens?.message);
+              return;
+            }
+
+            setItens(dataItens ?? []);
+          };
+          buscarIntens();
+        } catch {
+          Alert.alert(
+            "Erro de conexão",
+            "Sem internet, por favor tente novamente.",
+          );
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [atualizar, idLista, setItens],
+    ),
+  );
+
+  const adicionaritens = async ({ name }: { name: string }) => {
+    const { error: errorAddItem } = await AddItem({
+      lista_id: idLista,
+      nome_item: name,
+      status_item: "Item não compardo",
+    });
+    if (errorAddItem) {
+      Alert.alert("Erro ao adicionar item", errorAddItem?.message);
+    }
+    setShowModalAdd(!showModalAdd);
+    setAtualizar((prev) => prev + 1);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,9 +89,9 @@ const Itens = () => {
           </Pressable>
 
           <View>
-            <Text style={styles.textHeadrd1}>Mercado Semanal</Text>
+            <Text style={styles.textHeadrd1}>{nomeLista}</Text>
 
-            <Text style={styles.textHeadrd2}>Atualizado há 2 horas</Text>
+            <Text style={styles.textHeadrd2}>{dataCriacao}</Text>
           </View>
         </View>
 
@@ -39,78 +108,112 @@ const Itens = () => {
       </View>
 
       <View style={{ width: "100%", height: "85%" }}>
-        <ScrollView>
-          <Pressable
-            style={styles.boxItens}
-            onPress={() => setModalItem(!modalItem)}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                height: "50%",
-              }}
-            >
-              <View style={{ flexDirection: "row", gap: 16 }}>
-                <View style={styles.IconBoxItens}>
-                  <MaterialIcons
-                    name="shopping-cart"
-                    color={"#3B82F6"}
-                    size={24}
-                  />
+        {!itens || itens.length === 0 ? (
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.listaVazia}>Poxa!! sua lista está vazia.</Text>
+            <Text style={styles.listaVazia}>
+              Que tal adicionar um item nela?
+            </Text>
+          </View>
+        ) : (
+          <ScrollView>
+            {itens.map((itens) => (
+              <Pressable
+                style={styles.boxItens}
+                onPress={() => setModalItem(!modalItem)}
+                key={itens.id}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    height: "50%",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", gap: 16 }}>
+                    <View style={styles.IconBoxItens}>
+                      <MaterialIcons
+                        name="shopping-cart"
+                        color={"#3B82F6"}
+                        size={24}
+                      />
+                    </View>
+                    <View>
+                      <Text style={styles.textBoxItens1}>
+                        {itens.nome_item}
+                      </Text>
+                      <Text style={styles.textBoxItens2}>
+                        {itens.status_item}
+                      </Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Pressable onPress={() => setShowModalExcluit(true)}>
+                      <MaterialIcons
+                        name="more-vert"
+                        size={24}
+                        color={"#64748B"}
+                      />
+                      <ModalExcluir
+                        visible={showMomdalExcluir}
+                        onCancel={() => setShowModalExcluit(false)}
+                        onConfirm={() => setShowModalExcluit(false)}
+                      />
+                    </Pressable>
+                  </View>
                 </View>
-                <View>
-                  <Text style={styles.textBoxItens1}> Leite </Text>
-                  <Text style={styles.textBoxItens2}> Não comprado</Text>
-                </View>
-              </View>
-              <View>
-                <Pressable onPress={() => setShowModalExcluit(true)}>
-                  <MaterialIcons name="more-vert" size={24} color={"#64748B"} />
-                  <ModalExcluir
-                    visible={showMomdalExcluir}
-                    onCancel={() => setShowModalExcluit(false)}
-                    onConfirm={() => setShowModalExcluit(false)}
-                  />
-                </Pressable>
-              </View>
-            </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                height: "50%",
-              }}
-            >
-              <View>
-                <View style={styles.boxUnidade}>
-                  <Pressable style={styles.btnBoxUnidade}>
-                    <MaterialIcons name="remove" size={14} color={"#F1F5F9"} />
-                  </Pressable>
-                  <Text style={styles.textBoxItens1}> 01</Text>
-                  <Pressable style={styles.btnBoxUnidade}>
-                    <MaterialIcons name="add" size={14} color={"#F1F5F9"} />
-                  </Pressable>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    height: "50%",
+                  }}
+                >
+                  <View>
+                    <View style={styles.boxUnidade}>
+                      <Pressable style={styles.btnBoxUnidade}>
+                        <MaterialIcons
+                          name="remove"
+                          size={14}
+                          color={"#F1F5F9"}
+                        />
+                      </Pressable>
+                      <Text style={styles.textBoxItens1}>
+                        {" "}
+                        {itens.quantidade ? itens.quantidade : 0}
+                      </Text>
+                      <Pressable style={styles.btnBoxUnidade}>
+                        <MaterialIcons name="add" size={14} color={"#F1F5F9"} />
+                      </Pressable>
+                    </View>
+                  </View>
+                  <View>
+                    <Text style={styles.textBoxItens2}>PREÇO UN.</Text>
+                    <Text style={styles.textBoxItens1}>
+                      {" "}
+                      {itens.valor_item ? itens.valor_item : "0,00"}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.textBoxItens2}>SUBTOTAL</Text>
+                    <Text style={styles.textBoxItens1}>
+                      {itens.quantidade && itens.valor_item
+                        ? itens.quantidade * itens.valor_item // só multiplica se os dois existirem
+                        : "0,00"}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <View>
-                <Text style={styles.textBoxItens2}>PREÇO UN.</Text>
-                <Text style={styles.textBoxItens1}> R$ 4,89</Text>
-              </View>
-              <View>
-                <Text style={styles.textBoxItens2}>SUBTOTAL</Text>
-                <Text style={styles.textBoxItens1}> R$ 4,89</Text>
-              </View>
-            </View>
-            <ModalItens
-              visible={modalItem}
-              onRequestClose={() => setModalItem(false)}
-            />
-          </Pressable>
-        </ScrollView>
+                <ModalItens
+                  visible={modalItem}
+                  onRequestClose={() => setModalItem(false)}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
+        )}
       </View>
 
       <View style={styles.btnAddPosition}>
@@ -123,9 +226,14 @@ const Itens = () => {
             <Text style={styles.abaTotalBtnTexto}>Finalizar</Text>
           </View>
         </View>
-        <View style={styles.btnAdd}>
+        <Pressable style={styles.btnAdd} onPress={() => setShowModalAdd(true)}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
-        </View>
+        </Pressable>
+        <ModalAdicionar
+          visible={showModalAdd}
+          onCancel={() => setShowModalAdd(false)}
+          onCreate={(name) => adicionaritens({ name })}
+        />
       </View>
     </SafeAreaView>
   );
@@ -284,6 +392,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
+  },
+
+  listaVazia: {
+    color: "#94A3B8",
+    fontSize: 16,
+    fontWeight: "semibold",
+
+    textAlign: "center",
   },
 });
 
