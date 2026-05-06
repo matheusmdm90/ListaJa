@@ -1,4 +1,4 @@
-import { AddItem, GetItensLista } from "@/utils/requisicao";
+import { AddItem, GetItensLista, UpdateItem } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -28,7 +28,7 @@ const Itens = () => {
 
   const router = useRouter();
   const [showModalAdd, setShowModalAdd] = useState(false);
-  const [modalItem, setModalItem] = useState(false);
+  const [itemSelecionado, setItemSelecionado] = useState<string | null>(null);
   const [showMomdalExcluir, setShowModalExcluit] = useState(false);
   const [atualizar, setAtualizar] = useState(0);
   const [itens, setItens] = useState<dadosItensType[]>();
@@ -80,6 +80,39 @@ const Itens = () => {
     setAtualizar((prev) => prev + 1);
   };
 
+  const atualizarItem = async ({
+    quantidade,
+    valor,
+    idItem,
+  }: {
+    quantidade: number;
+    valor: number;
+    idItem: string;
+  }) => {
+    try {
+      const { error: errorAoAtualizar } = await UpdateItem({
+        idItem: idItem,
+        quantidade: quantidade,
+        valor_item: valor,
+      });
+      if (errorAoAtualizar) {
+        Alert.alert("Erro ao adicionar item", errorAoAtualizar?.message);
+      }
+
+      setAtualizar((prev) => prev + 1);
+      setItemSelecionado(null);
+    } catch {
+      Alert.alert("Erro ao adicionar item", "tente de novo");
+    }
+  };
+
+  const formatarValor = (valor: number) => {
+    return valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -117,11 +150,11 @@ const Itens = () => {
           </View>
         ) : (
           <ScrollView>
-            {itens.map((itens) => (
+            {itens.map((item) => (
               <Pressable
                 style={styles.boxItens}
-                onPress={() => setModalItem(!modalItem)}
-                key={itens.id}
+                onPress={() => setItemSelecionado(item.id)}
+                key={item.id}
               >
                 <View
                   style={{
@@ -140,11 +173,9 @@ const Itens = () => {
                       />
                     </View>
                     <View>
-                      <Text style={styles.textBoxItens1}>
-                        {itens.nome_item}
-                      </Text>
+                      <Text style={styles.textBoxItens1}>{item.nome_item}</Text>
                       <Text style={styles.textBoxItens2}>
-                        {itens.status_item}
+                        {item.status_item}
                       </Text>
                     </View>
                   </View>
@@ -183,7 +214,7 @@ const Itens = () => {
                       </Pressable>
                       <Text style={styles.textBoxItens1}>
                         {" "}
-                        {itens.quantidade ? itens.quantidade : 0}
+                        {item.quantidade ? item.quantidade : 0}
                       </Text>
                       <Pressable style={styles.btnBoxUnidade}>
                         <MaterialIcons name="add" size={14} color={"#F1F5F9"} />
@@ -194,22 +225,20 @@ const Itens = () => {
                     <Text style={styles.textBoxItens2}>PREÇO UN.</Text>
                     <Text style={styles.textBoxItens1}>
                       {" "}
-                      {itens.valor_item ? itens.valor_item : "0,00"}
+                      {item.valor_item
+                        ? formatarValor(item.valor_item)
+                        : "0,00"}
                     </Text>
                   </View>
                   <View>
                     <Text style={styles.textBoxItens2}>SUBTOTAL</Text>
                     <Text style={styles.textBoxItens1}>
-                      {itens.quantidade && itens.valor_item
-                        ? itens.quantidade * itens.valor_item // só multiplica se os dois existirem
+                      {item.quantidade && item.valor_item
+                        ? formatarValor(item.quantidade * item.valor_item) // só multiplica se os dois existirem
                         : "0,00"}
                     </Text>
                   </View>
                 </View>
-                <ModalItens
-                  visible={modalItem}
-                  onRequestClose={() => setModalItem(false)}
-                />
               </Pressable>
             ))}
           </ScrollView>
@@ -229,6 +258,29 @@ const Itens = () => {
         <Pressable style={styles.btnAdd} onPress={() => setShowModalAdd(true)}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
         </Pressable>
+
+        {/* modal dos dados do itens  */}
+
+        {itemSelecionado &&
+          (() => {
+            const item = itens.find((i) => i.id === itemSelecionado)!; // acha o item pelo id
+
+            return (
+              <ModalItens
+                idItem={item.id}
+                nomeItem={item.nome_item}
+                valorAtual={item.valor_item ?? 0}
+                quantidadeAtual={item.quantidade ?? 0}
+                visible={!!itemSelecionado}
+                onRequestClose={() => setItemSelecionado(null)}
+                onCreate={(quantidade, valor, idItem) =>
+                  atualizarItem({ quantidade, valor, idItem })
+                }
+              />
+            );
+          })()}
+
+        {/* modal adicionar item  */}
         <ModalAdicionar
           visible={showModalAdd}
           onCancel={() => setShowModalAdd(false)}

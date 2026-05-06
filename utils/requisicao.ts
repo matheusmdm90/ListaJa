@@ -118,3 +118,23 @@ export const AddItem = async ({
     .insert([{ nome_item, lista_id, status_item }]);
   return { data, error };
 };
+
+// updade item
+
+export const UpdateItem = async ({
+  quantidade,
+  valor_item,
+  idItem,
+}: {
+  quantidade: number;
+  valor_item: number;
+  idItem: string;
+}) => {
+  let { data, error } = await supabase
+    .from("item")
+    .update({ quantidade, valor_item })
+    .eq("id", idItem)
+    .select();
+
+  return { data, error };
+};

@@ -1,4 +1,5 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,11 +14,34 @@ import {
 } from "react-native";
 
 interface ModalProps {
+  idItem: string;
+  nomeItem: string;
   visible: boolean;
+  valorAtual: number;
+  quantidadeAtual: number;
   onRequestClose?: () => void;
+  onCreate: (quantidade: number, valor: number, idItem: string) => void;
 }
 
-const ModalItens = ({ visible, onRequestClose }: ModalProps) => {
+const ModalItens = ({
+  visible,
+  onRequestClose,
+  onCreate,
+  idItem,
+  nomeItem,
+  valorAtual,
+  quantidadeAtual,
+}: ModalProps) => {
+  const [quantidade, setQuantidade] = useState(quantidadeAtual);
+  const [valor, setValor] = useState(`${valorAtual}`);
+
+  const handleUpdate = () => {
+    // transforma entring em number
+    onCreate(quantidade, parseFloat(valor.replace(",", ".")) || 0, idItem);
+    setValor("");
+    setQuantidade(0);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Modal
@@ -63,7 +87,7 @@ const ModalItens = ({ visible, onRequestClose }: ModalProps) => {
                     />
                   </View>
 
-                  <Text style={styles.titulo}>Arroz 5kg</Text>
+                  <Text style={styles.titulo}>{nomeItem}</Text>
 
                   <Text style={styles.textAux}>Ajuste os detalhes do item</Text>
 
@@ -71,15 +95,21 @@ const ModalItens = ({ visible, onRequestClose }: ModalProps) => {
                     <Text style={styles.textItens}>Quantidade</Text>
 
                     <View style={styles.boxOpcao}>
-                      <Pressable style={styles.btnMenos}>
+                      <Pressable
+                        style={styles.btnMenos}
+                        onPress={() => setQuantidade((q) => Math.max(0, q - 1))}
+                      >
                         <MaterialIcons
                           name="remove"
                           size={24}
                           color={"#FFFF"}
                         />
                       </Pressable>
-                      <Text style={styles.textUnd}>1</Text>
-                      <Pressable style={styles.btnMais}>
+                      <Text style={styles.textUnd}>{quantidade}</Text>
+                      <Pressable
+                        style={styles.btnMais}
+                        onPress={() => setQuantidade((q) => q + 1)}
+                      >
                         <MaterialIcons name="add" size={24} color={"#FFFF"} />
                       </Pressable>
                     </View>
@@ -95,11 +125,13 @@ const ModalItens = ({ visible, onRequestClose }: ModalProps) => {
                         placeholder="0,00"
                         placeholderTextColor={"#FFFFFF30"}
                         style={styles.input}
+                        value={valor}
+                        onChangeText={setValor}
                       />
                     </View>
                   </View>
 
-                  <Pressable style={styles.btnConfirmar}>
+                  <Pressable style={styles.btnConfirmar} onPress={handleUpdate}>
                     <Text>Confirmar</Text>
                   </Pressable>
                 </View>
