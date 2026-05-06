@@ -32,14 +32,14 @@ const ModalItens = ({
   valorAtual,
   quantidadeAtual,
 }: ModalProps) => {
-  const [quantidade, setQuantidade] = useState(quantidadeAtual);
-  const [valor, setValor] = useState(`${valorAtual}`);
+  const [quantidade, setQuantidade] = useState(
+    quantidadeAtual ? quantidadeAtual : 1,
+  );
+  const [valor, setValor] = useState(valorAtual ? `${valorAtual}` : "");
 
   const handleUpdate = () => {
     // transforma entring em number
-    onCreate(quantidade, parseFloat(valor.replace(",", ".")) || 0, idItem);
-    setValor("");
-    setQuantidade(0);
+    onCreate(quantidade, parseFloat(valor.replace(",", ".")), idItem);
   };
 
   return (

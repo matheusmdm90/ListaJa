@@ -113,6 +113,12 @@ const Itens = () => {
     });
   };
 
+  const totalGeral =
+    itens?.reduce((total, item) => {
+      const subtotal = (item.quantidade ?? 0) * (item.valor_item ?? 0);
+      return total + subtotal;
+    }, 0) ?? 0;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -205,7 +211,16 @@ const Itens = () => {
                 >
                   <View>
                     <View style={styles.boxUnidade}>
-                      <Pressable style={styles.btnBoxUnidade}>
+                      <Pressable
+                        style={styles.btnBoxUnidade}
+                        onPress={() =>
+                          atualizarItem({
+                            valor: item.valor_item ?? 0,
+                            idItem: item.id,
+                            quantidade: Math.max(0, (item.quantidade ?? 0) - 1),
+                          })
+                        }
+                      >
                         <MaterialIcons
                           name="remove"
                           size={14}
@@ -216,7 +231,16 @@ const Itens = () => {
                         {" "}
                         {item.quantidade ? item.quantidade : 0}
                       </Text>
-                      <Pressable style={styles.btnBoxUnidade}>
+                      <Pressable
+                        style={styles.btnBoxUnidade}
+                        onPress={() =>
+                          atualizarItem({
+                            valor: item.valor_item ?? 0,
+                            idItem: item.id,
+                            quantidade: Math.max(0, (item.quantidade ?? 0) + 1),
+                          })
+                        }
+                      >
                         <MaterialIcons name="add" size={14} color={"#F1F5F9"} />
                       </Pressable>
                     </View>
@@ -249,7 +273,9 @@ const Itens = () => {
         <View style={styles.abaTotal}>
           <View>
             <Text style={styles.abaTotalText1}> Total Estimado </Text>
-            <Text style={styles.abaTotalText2}>R$ 4,86</Text>
+            <Text style={styles.abaTotalText2}>
+              R$ {formatarValor(totalGeral)}
+            </Text>
           </View>
           <View style={styles.abaTotalBtn}>
             <Text style={styles.abaTotalBtnTexto}>Finalizar</Text>

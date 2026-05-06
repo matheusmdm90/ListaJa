@@ -97,7 +97,8 @@ export const GetItensLista = async ({ idDaLista }: { idDaLista: string }) => {
   let { data, error } = await supabase
     .from("item")
     .select("*")
-    .eq("lista_id", idDaLista);
+    .eq("lista_id", idDaLista)
+    .order("created_at", { ascending: true });
 
   return { data, error };
 };
