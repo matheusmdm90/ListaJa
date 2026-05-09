@@ -139,3 +139,11 @@ export const UpdateItem = async ({
 
   return { data, error };
 };
+
+// excluir item
+
+export const excluirItem = async ({ idItem }: { idItem: string }) => {
+  const { error } = await supabase.from("item").delete().eq("id", idItem);
+
+  return { error };
+};

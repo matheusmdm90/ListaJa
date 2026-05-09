@@ -1,4 +1,9 @@
-import { AddItem, GetItensLista, UpdateItem } from "@/utils/requisicao";
+import {
+  AddItem,
+  excluirItem,
+  GetItensLista,
+  UpdateItem,
+} from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -29,7 +34,9 @@ const Itens = () => {
   const router = useRouter();
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState<string | null>(null);
-  const [showMomdalExcluir, setShowModalExcluit] = useState(false);
+  const [showMomdalExcluir, setShowModalExcluit] = useState<string | null>(
+    null,
+  );
   const [atualizar, setAtualizar] = useState(0);
   const [itens, setItens] = useState<dadosItensType[]>();
   const { idLista, nomeLista, dataCriacao } = useLocalSearchParams<{
@@ -119,6 +126,16 @@ const Itens = () => {
       return total + subtotal;
     }, 0) ?? 0;
 
+  const excluirITemLista = async ({ idItem }: { idItem: string }) => {
+    const { error: erroraoexcluir } = await excluirItem({
+      idItem: idItem,
+    });
+    if (erroraoexcluir) {
+      Alert.alert("Erro ao adicionar item", erroraoexcluir?.message);
+    }
+    setAtualizar((prev) => prev + 1);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -137,11 +154,6 @@ const Itens = () => {
         <View>
           <Pressable>
             <MaterialIcons name="more-vert" size={24} color={"#64748B"} />
-            <ModalExcluir
-              visible={showMomdalExcluir}
-              onCancel={() => setShowModalExcluit(false)}
-              onConfirm={() => setShowModalExcluit(false)}
-            />
           </Pressable>
         </View>
       </View>
@@ -186,16 +198,16 @@ const Itens = () => {
                     </View>
                   </View>
                   <View>
-                    <Pressable onPress={() => setShowModalExcluit(true)}>
+                    <Pressable
+                      onPress={(e) => {
+                        e.stopPropagation(); // 👈 impede o clique de subir para o Pressable pai
+                        setShowModalExcluit(item.id);
+                      }}
+                    >
                       <MaterialIcons
                         name="more-vert"
                         size={24}
                         color={"#64748B"}
-                      />
-                      <ModalExcluir
-                        visible={showMomdalExcluir}
-                        onCancel={() => setShowModalExcluit(false)}
-                        onConfirm={() => setShowModalExcluit(false)}
                       />
                     </Pressable>
                   </View>
@@ -291,6 +303,8 @@ const Itens = () => {
           (() => {
             const item = itens.find((i) => i.id === itemSelecionado)!; // acha o item pelo id
 
+            if (!item) return null;
+
             return (
               <ModalItens
                 idItem={item.id}
@@ -302,6 +316,20 @@ const Itens = () => {
                 onCreate={(quantidade, valor, idItem) =>
                   atualizarItem({ quantidade, valor, idItem })
                 }
+              />
+            );
+          })()}
+
+        {showMomdalExcluir &&
+          (() => {
+            const item = itens.find((i) => i.id === showMomdalExcluir)!;
+            if (!item) return null;
+            return (
+              <ModalExcluir
+                idItem={item.id}
+                visible={!!showMomdalExcluir}
+                onCancel={() => setShowModalExcluit(null)}
+                onConfirm={(idItem) => excluirITemLista({ idItem })}
               />
             );
           })()}

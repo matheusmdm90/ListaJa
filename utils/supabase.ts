@@ -1,27 +1,19 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
-import Constants from "expo-constants";
+import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 
-const getEnv = (key: string): string | undefined => {
-  return (
-    process.env[key] ||
-    Constants.expoConfig?.extra?.[key] ||
-    Constants.manifest?.extra?.[key]
-  );
+const ExpoSecureStoreAdapter = {
+  getItem: (key: string) => SecureStore.getItemAsync(key),
+  setItem: (key: string, value: string) => SecureStore.setItemAsync(key, value),
+  removeItem: (key: string) => SecureStore.deleteItemAsync(key),
 };
 
-const SUPABASE_URL = getEnv("EXPO_PUBLIC_SUPABASE_URL");
-const SUPABASE_KEY = getEnv("EXPO_PUBLIC_SUPABASE_KEY");
-
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  throw new Error(
-    "Defina EXPO_PUBLIC_SUPABASE_URL e EXPO_PUBLIC_SUPABASE_KEY em .env.local",
-  );
-}
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_KEY!;
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
-    storage: AsyncStorage,
+    storage: Platform.OS === "web" ? undefined : ExpoSecureStoreAdapter,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

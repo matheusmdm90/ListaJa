@@ -3,6 +3,7 @@ import React from "react";
 import {
   Modal,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,17 +12,23 @@ import {
 
 type Props = {
   visible: boolean;
-  onConfirm: () => void;
+  onConfirm: (idItem: string) => void;
   onCancel: () => void;
   message?: string;
+  idItem: string;
 };
 
-const ModalExcluir: React.FC<Props> = ({
+const ModalExcluir = ({
   visible,
   onConfirm,
   onCancel,
   message = "Tem certeza que deseja remover este item da sua lista?",
-}) => {
+  idItem,
+}: Props) => {
+  const handleUpdate = () => {
+    onConfirm(idItem);
+  };
+
   return (
     <Modal
       visible={visible}
@@ -44,13 +51,9 @@ const ModalExcluir: React.FC<Props> = ({
           <Text style={styles.title}>Excluir item?</Text>
           <Text style={styles.message}>{message}</Text>
 
-          <TouchableOpacity
-            style={styles.primaryButton}
-            activeOpacity={0.85}
-            onPress={onConfirm}
-          >
+          <Pressable style={styles.primaryButton} onPress={handleUpdate}>
             <Text style={styles.primaryText}>Excluir</Text>
-          </TouchableOpacity>
+          </Pressable>
 
           <TouchableOpacity
             style={styles.secondaryButton}
