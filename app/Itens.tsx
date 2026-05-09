@@ -1,3 +1,4 @@
+import { ITENS_SUPERMERCADO } from "@/data/dataItem";
 import {
   AddItem,
   excluirItem,
@@ -6,7 +7,7 @@ import {
 } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -44,6 +45,10 @@ const Itens = () => {
     nomeLista: string;
     dataCriacao: string;
   }>();
+  const [listaSurgestao, setlistaSurgestao] = useState<string[] | undefined>(
+    undefined,
+  );
+
   useFocusEffect(
     useCallback(
       () => {
@@ -73,6 +78,15 @@ const Itens = () => {
       [atualizar, idLista, setItens],
     ),
   );
+
+  useEffect(() => {
+    if (
+      nomeLista.toLowerCase().includes("mercado") ||
+      nomeLista.toLowerCase().includes("compras")
+    ) {
+      setlistaSurgestao(ITENS_SUPERMERCADO);
+    }
+  }, [nomeLista]);
 
   const adicionaritens = async ({ name }: { name: string }) => {
     const { error: errorAddItem } = await AddItem({
@@ -339,6 +353,10 @@ const Itens = () => {
           visible={showModalAdd}
           onCancel={() => setShowModalAdd(false)}
           onCreate={(name) => adicionaritens({ name })}
+          titulo="Novo Item"
+          valor="Item"
+          placeholder="Ovo, Leite, Manteiga "
+          sugestoes={listaSurgestao}
         />
       </View>
     </SafeAreaView>

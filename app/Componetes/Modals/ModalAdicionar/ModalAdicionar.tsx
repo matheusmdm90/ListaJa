@@ -15,13 +15,42 @@ type Props = {
   visible: boolean;
   onCreate: (name: string) => void;
   onCancel: () => void;
+  titulo?: string;
+  // valor você vai dizer oque quer cria
+  valor?: string;
+  // e o placeholder do input oque vc quer colocar nele
+  placeholder?: string;
+  sugestoes?: string[];
 };
 
 // const { width } = Dimensions.get("window");
 // const CARD_WIDTH = Math.min(520, width - 40);
 
-const ModalAdicionar: React.FC<Props> = ({ visible, onCreate, onCancel }) => {
+const ModalAdicionar = ({
+  visible,
+  onCreate,
+  onCancel,
+  titulo,
+  valor,
+  placeholder,
+  sugestoes,
+}: Props) => {
   const [name, setName] = useState("");
+
+  const [sugestoesVisiveis, setSugestoesVisiveis] = useState<string[]>([]);
+
+  const handleChangeText = (text: string) => {
+    setName(text);
+    if (sugestoes && text.length > 0) {
+      // 👈 só filtra se vier sugestoes
+      const filtrados = sugestoes
+        .filter((item) => item.toLowerCase().startsWith(text.toLowerCase()))
+        .slice(0, 5);
+      setSugestoesVisiveis(filtrados);
+    } else {
+      setSugestoesVisiveis([]);
+    }
+  };
 
   const handleCreate = () => {
     onCreate(name.trim());
@@ -55,20 +84,45 @@ const ModalAdicionar: React.FC<Props> = ({ visible, onCreate, onCancel }) => {
               </Pressable>
             </View>
 
-            <Text style={styles.title}>Nova Lista</Text>
+            <Text style={styles.title}>{titulo ? titulo : "Nova Lista"}</Text>
             <Text style={styles.subtitle}>
               Defina um nome para começar a organizar.
             </Text>
 
-            <Text style={styles.label}>NOME DA LISTA</Text>
+            <Text style={styles.label}>NOME</Text>
             <TextInput
               value={name}
-              onChangeText={setName}
-              placeholder="Ex: Churrasco, Mercado Semana"
+              onChangeText={handleChangeText}
+              placeholder={`Ex: ${
+                placeholder ? placeholder : "Churrasco, Mercado Semana"
+              }`}
               placeholderTextColor="#6b7380"
               style={styles.input}
               returnKeyType="done"
             />
+
+            {/* 👇 lista de sugestões */}
+            {sugestoesVisiveis.length > 0 && (
+              <View style={styles.sugestoes}>
+                {sugestoesVisiveis.map((item) => (
+                  <Pressable
+                    key={item}
+                    style={styles.sugestaoItem}
+                    onPress={() => {
+                      setName(item);
+                      setSugestoesVisiveis([]);
+                    }}
+                  >
+                    <MaterialCommunityIcons
+                      name="magnify"
+                      size={16}
+                      color="#64748B"
+                    />
+                    <Text style={styles.sugestaoTexto}>{item}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
 
             <View style={{ height: 12 }} />
 
@@ -81,7 +135,9 @@ const ModalAdicionar: React.FC<Props> = ({ visible, onCreate, onCancel }) => {
                 <View style={styles.plusCircle}>
                   <MaterialCommunityIcons name="plus" size={24} color="#ffff" />
                 </View>
-                <Text style={styles.createText}>Criar Lista</Text>
+                <Text style={styles.createText}>
+                  Criar {valor ? valor : "Lista"}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -169,6 +225,27 @@ const styles = StyleSheet.create({
     color: "#ffff",
     fontSize: 18,
     fontWeight: "700",
+  },
+
+  sugestoes: {
+    backgroundColor: "#0f1420",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+    marginTop: 6,
+    overflow: "hidden",
+  },
+  sugestaoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.05)",
+  },
+  sugestaoTexto: {
+    color: "#dbe7ff",
+    fontSize: 14,
   },
 });
 
