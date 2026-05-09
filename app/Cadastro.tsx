@@ -3,7 +3,14 @@ import { CadastrarUsuario, fazerCadastro } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Inputs from "./Componetes/inputs";
 
@@ -14,8 +21,12 @@ const Cadastro = () => {
   const [confirmeEmail, setConfirmeEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmeSenha, setConfirmeSenha] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const criarCadastro = async () => {
+    if (loading) return;
+
+    setLoading(true);
     // Validação de e-mail
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email || !emailRegex.test(email)) {
@@ -74,9 +85,8 @@ const Cadastro = () => {
       }
 
       Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
-    } catch (err) {
-      console.log(err);
-      Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
+    } finally {
+      setLoading(false); // 👈 sempre desliga o loading, mesmo se der erro
     }
 
     setConfirmeEmail("");
@@ -140,8 +150,16 @@ const Cadastro = () => {
       </View>
 
       <View style={styles.btnContainer}>
-        <Pressable style={styles.btn} onPress={criarCadastro}>
-          <Text style={styles.btnText}>Cadastrar </Text>
+        <Pressable
+          style={[styles.btn, loading && { opacity: 0.6 }]}
+          onPress={criarCadastro}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.btnText}>Cadastrar </Text>
+          )}
           <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
         </Pressable>
       </View>
