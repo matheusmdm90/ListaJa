@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -110,86 +111,88 @@ const Cadastro = () => {
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.header}>
-            <Pressable style={styles.btnBack} onPress={() => router.back()}>
-              <MaterialIcons name="arrow-back" size={16} color={"#FFFFFF"} />
-            </Pressable>
+          <ScrollView style={{ flex: 1 }}>
+            <View style={styles.header}>
+              <Pressable style={styles.btnBack} onPress={() => router.back()}>
+                <MaterialIcons name="arrow-back" size={16} color={"#FFFFFF"} />
+              </Pressable>
 
-            <Text style={styles.titulo}>Criar Conta</Text>
+              <Text style={styles.titulo}>Criar Conta</Text>
 
-            <View style={styles.iconPlaceholder} />
-          </View>
+              <View style={styles.iconPlaceholder} />
+            </View>
 
-          <View style={styles.inputContainer}>
-            <Inputs
-              nomeInput="Nome Completo"
-              placeholder="Digite seu nome Completo"
-              IconName="person"
-              value={nome}
-              onChangeText={setNome}
-            />
+            <View style={styles.inputContainer}>
+              <Inputs
+                nomeInput="Nome Completo"
+                placeholder="Digite seu nome Completo"
+                IconName="person"
+                value={nome}
+                onChangeText={setNome}
+              />
 
-            <Inputs
-              nomeInput="E-mail"
-              placeholder="digite teu email"
-              IconName="email"
-              value={email}
-              onChangeText={setEmail}
-            />
-            <Inputs
-              nomeInput="Confirme seu E-Mail"
-              placeholder="Confirme seu E-Mail"
-              IconName="mark-email-read"
-              value={confirmeEmail}
-              onChangeText={setConfirmeEmail}
-            />
+              <Inputs
+                nomeInput="E-mail"
+                placeholder="digite teu email"
+                IconName="email"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Inputs
+                nomeInput="Confirme seu E-Mail"
+                placeholder="Confirme seu E-Mail"
+                IconName="mark-email-read"
+                value={confirmeEmail}
+                onChangeText={setConfirmeEmail}
+              />
 
-            <Inputs
-              nomeInput="Senha"
-              placeholder="*******"
-              IconName="lock"
-              value={senha}
-              onChangeText={setSenha}
-            />
-            <Inputs
-              nomeInput="Confirme sua senha"
-              placeholder="*******"
-              IconName="lock-reset"
-              value={confirmeSenha}
-              onChangeText={setConfirmeSenha}
-            />
-          </View>
+              <Inputs
+                nomeInput="Senha"
+                placeholder="*******"
+                IconName="lock"
+                value={senha}
+                onChangeText={setSenha}
+              />
+              <Inputs
+                nomeInput="Confirme sua senha"
+                placeholder="*******"
+                IconName="lock-reset"
+                value={confirmeSenha}
+                onChangeText={setConfirmeSenha}
+              />
+            </View>
 
-          <View style={styles.btnContainer}>
-            <Pressable
-              style={[styles.btn, loading && { opacity: 0.6 }]}
-              onPress={criarCadastro}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <>
-                  <Text style={styles.btnText}>Cadastrar </Text>
-                  <MaterialIcons
-                    name="arrow-forward"
-                    color={"#ffff"}
-                    size={16}
-                  />
-                </>
-              )}
-            </Pressable>
-          </View>
+            <View style={styles.btnContainer}>
+              <Pressable
+                style={[styles.btn, loading && { opacity: 0.6 }]}
+                onPress={criarCadastro}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Text style={styles.btnText}>Cadastrar </Text>
+                    <MaterialIcons
+                      name="arrow-forward"
+                      color={"#ffff"}
+                      size={16}
+                    />
+                  </>
+                )}
+              </Pressable>
+            </View>
 
-          <View style={styles.cadastro}>
-            <Text style={styles.textoCadastro1}>Ja tem uma Conta?</Text>
-            <Text
-              style={styles.textoCadastro2}
-              onPress={() => router.push("/")}
-            >
-              Entrar
-            </Text>
-          </View>
+            <View style={styles.cadastro}>
+              <Text style={styles.textoCadastro1}>Ja tem uma Conta?</Text>
+              <Text
+                style={styles.textoCadastro2}
+                onPress={() => router.push("/")}
+              >
+                Entrar
+              </Text>
+            </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -200,14 +203,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#111420",
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
   },
 
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
+    paddingHorizontal: 5,
     height: 60,
   },
 
