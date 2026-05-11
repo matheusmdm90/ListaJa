@@ -50,7 +50,6 @@ const Itens = () => {
   useFocusEffect(
     useCallback(
       () => {
-        console.log(idLista);
         try {
           const buscarIntens = async () => {
             const { data: dataItens, error: errorDataItens } =
