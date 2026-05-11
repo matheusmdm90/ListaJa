@@ -23,6 +23,10 @@ export default function Index() {
   const { dadosLogin } = useApp();
 
   const login = async () => {
+    if (!email?.trim()) {
+      Alert.alert("Erro", "Email obrigatório");
+      return;
+    }
     try {
       const { data, error } = await fazerLogin({
         email,

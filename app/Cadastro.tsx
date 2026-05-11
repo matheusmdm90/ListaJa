@@ -49,7 +49,7 @@ const Cadastro = () => {
     if (!senha || senha.length < 8) {
       Alert.alert(
         "Senha inválida",
-        "A senha deve ter pelo menos 6 caracteres.",
+        "A senha deve ter pelo menos 8 caracteres.",
       );
       return;
     }
@@ -86,14 +86,19 @@ const Cadastro = () => {
           );
           return;
         }
+        Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
         router.push("/");
         setConfirmeEmail("");
         setNome("");
         setEmail("");
         setConfirmeSenha("");
         setSenha("");
-        Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
       }
+    } catch {
+      Alert.alert(
+        "Erro de conexão",
+        "Verifique sua internet e tente novamente.",
+      );
     } finally {
       setLoading(false); // 👈 sempre desliga o loading, mesmo se der erro
     }

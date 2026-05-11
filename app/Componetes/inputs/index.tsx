@@ -2,7 +2,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-interface inputs {
+interface inputsPropsType {
   nomeInput?: string;
   placeholder: string;
   IconName?: string;
@@ -16,7 +16,7 @@ const Inputs = ({
   nomeInput,
   value,
   onChangeText,
-}: inputs) => {
+}: inputsPropsType) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const isPasswordField =
