@@ -1,5 +1,5 @@
 import { useApp } from "@/Contexts/UserApp";
-import { ContaUsuario, fazerLogin } from "@/utils/requisicao";
+import { fazerLogin, obterUsuario } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export default function Index() {
 
   const [mostrarSenha, setMostrarSenha] = useState(true);
   const [email, setEmail] = useState("");
-  const [senha, setSanha] = useState("");
+  const [senha, setSenha] = useState("");
   const { dadosLogin } = useApp();
 
   const login = async () => {
@@ -34,7 +34,7 @@ export default function Index() {
       }
       const id = data.user?.id;
 
-      const { data: dadosUser, error: errorDadosUser } = await ContaUsuario({
+      const { data: dadosUser, error: errorDadosUser } = await obterUsuario({
         id_usuario: id,
       });
       if (errorDadosUser) {
@@ -93,7 +93,7 @@ export default function Index() {
               style={styles.input}
               secureTextEntry={mostrarSenha}
               value={senha}
-              onChangeText={setSanha}
+              onChangeText={setSenha}
             />
             <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
               <MaterialIcons

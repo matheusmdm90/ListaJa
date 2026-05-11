@@ -6,9 +6,13 @@ import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,7 +30,6 @@ const Cadastro = () => {
   const criarCadastro = async () => {
     if (loading) return;
 
-    setLoading(true);
     // Validação de e-mail
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!email || !emailRegex.test(email)) {
@@ -58,21 +61,22 @@ const Cadastro = () => {
       );
       return;
     }
+    setLoading(true);
 
     try {
-      const { data: usuaruiaSuapa, error } = await fazerCadastro({
+      const { data: usuarioSupabase } = await fazerCadastro({
         email: email,
         password: senha,
         name: nome,
       });
-      if (error) {
-        Alert.alert("Erro ao cadastrar", error.message);
+      if (!usuarioSupabase || !usuarioSupabase.user) {
+        Alert.alert("Erro", "Usuário não encontrado");
         return;
       } else {
         const { error: erroCadastrarUsuario } = await CadastrarUsuario({
           email: email,
           nome: nome,
-          user: usuaruiaSuapa.user,
+          user: usuarioSupabase.user,
         });
         if (erroCadastrarUsuario) {
           Alert.alert(
@@ -82,94 +86,108 @@ const Cadastro = () => {
           );
           return;
         }
+        router.push("/");
+        setConfirmeEmail("");
+        setNome("");
+        setEmail("");
+        setConfirmeSenha("");
+        setSenha("");
+        Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
       }
-
-      Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
     } finally {
       setLoading(false); // 👈 sempre desliga o loading, mesmo se der erro
     }
-
-    setConfirmeEmail("");
-    setNome("");
-    setEmail("");
-    setConfirmeSenha("");
-    setSenha("");
-    router.push("/");
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Pressable style={styles.btnBack} onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={16} color={"#FFFFFF"} />
-        </Pressable>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.header}>
+            <Pressable style={styles.btnBack} onPress={() => router.back()}>
+              <MaterialIcons name="arrow-back" size={16} color={"#FFFFFF"} />
+            </Pressable>
 
-        <Text style={styles.titulo}>Criar Conta</Text>
+            <Text style={styles.titulo}>Criar Conta</Text>
 
-        <View style={styles.iconPlaceholder} />
-      </View>
+            <View style={styles.iconPlaceholder} />
+          </View>
 
-      <View style={styles.inputContainer}>
-        <Inputs
-          nomeInput="Nome Completo"
-          placeholder="Digite seu nome Completo"
-          IconName="person"
-          value={nome}
-          onChangeText={setNome}
-        />
+          <View style={styles.inputContainer}>
+            <Inputs
+              nomeInput="Nome Completo"
+              placeholder="Digite seu nome Completo"
+              IconName="person"
+              value={nome}
+              onChangeText={setNome}
+            />
 
-        <Inputs
-          nomeInput="E-mail"
-          placeholder="digite teu email"
-          IconName="email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Inputs
-          nomeInput="Confirme seu E-Mail"
-          placeholder="Confirme seu E-Mail"
-          IconName="mark-email-read"
-          value={confirmeEmail}
-          onChangeText={setConfirmeEmail}
-        />
+            <Inputs
+              nomeInput="E-mail"
+              placeholder="digite teu email"
+              IconName="email"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <Inputs
+              nomeInput="Confirme seu E-Mail"
+              placeholder="Confirme seu E-Mail"
+              IconName="mark-email-read"
+              value={confirmeEmail}
+              onChangeText={setConfirmeEmail}
+            />
 
-        <Inputs
-          nomeInput="Senha"
-          placeholder="*******"
-          IconName="lock"
-          value={senha}
-          onChangeText={setSenha}
-        />
-        <Inputs
-          nomeInput="Confirme sua senha"
-          placeholder="*******"
-          IconName="lock-reset"
-          value={confirmeSenha}
-          onChangeText={setConfirmeSenha}
-        />
-      </View>
+            <Inputs
+              nomeInput="Senha"
+              placeholder="*******"
+              IconName="lock"
+              value={senha}
+              onChangeText={setSenha}
+            />
+            <Inputs
+              nomeInput="Confirme sua senha"
+              placeholder="*******"
+              IconName="lock-reset"
+              value={confirmeSenha}
+              onChangeText={setConfirmeSenha}
+            />
+          </View>
 
-      <View style={styles.btnContainer}>
-        <Pressable
-          style={[styles.btn, loading && { opacity: 0.6 }]}
-          onPress={criarCadastro}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.btnText}>Cadastrar </Text>
-          )}
-          <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
-        </Pressable>
-      </View>
+          <View style={styles.btnContainer}>
+            <Pressable
+              style={[styles.btn, loading && { opacity: 0.6 }]}
+              onPress={criarCadastro}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Text style={styles.btnText}>Cadastrar </Text>
+                  <MaterialIcons
+                    name="arrow-forward"
+                    color={"#ffff"}
+                    size={16}
+                  />
+                </>
+              )}
+            </Pressable>
+          </View>
 
-      <View style={styles.cadastro}>
-        <Text style={styles.textoCadastro1}>Ja tem uma Conta?</Text>
-        <Text style={styles.textoCadastro2} onPress={() => router.push("/")}>
-          Entrar
-        </Text>
-      </View>
+          <View style={styles.cadastro}>
+            <Text style={styles.textoCadastro1}>Ja tem uma Conta?</Text>
+            <Text
+              style={styles.textoCadastro2}
+              onPress={() => router.push("/")}
+            >
+              Entrar
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

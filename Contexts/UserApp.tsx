@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
 
 type UserContextType = {
-  user: dadosDoUsuario | null;
-  setUser: React.Dispatch<React.SetStateAction<dadosDoUsuario | null>>;
-  dadosLogin: (userData: dadosDoUsuario | null) => void;
+  user: dadosDoUsuariotype | null;
+  setUser: React.Dispatch<React.SetStateAction<dadosDoUsuariotype | null>>;
+  dadosLogin: (userData: dadosDoUsuariotype | null) => void;
   listas: dadosListaType[];
   setListas: React.Dispatch<React.SetStateAction<dadosListaType[]>>;
 };
@@ -11,15 +11,15 @@ type UserContextType = {
 type dadosListaType = {
   id: string;
   created_at: string;
-  usuiario_id: string;
+  usuario_id: string;
   nome_Lista: string;
   atualização: string;
   status_lista: string;
 };
 
-type dadosDoUsuario = {
+type dadosDoUsuariotype = {
   id: string;
-  user_is: string;
+  user_id: string;
   created_at: string;
   nome: string;
   email: string;
@@ -32,10 +32,10 @@ export const UserAppProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = useState<dadosDoUsuario | null>(null);
+  const [user, setUser] = useState<dadosDoUsuariotype | null>(null);
   const [listas, setListas] = useState<dadosListaType[]>([]);
 
-  const dadosLogin = (userData: dadosDoUsuario | null) => {
+  const dadosLogin = (userData: dadosDoUsuariotype | null) => {
     setUser(userData);
   };
 

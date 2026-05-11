@@ -1,8 +1,8 @@
 import { ITENS_SUPERMERCADO } from "@/data/dataItem";
 import {
-  AddItem,
+  adicionarItem,
   excluirItem,
-  GetItensLista,
+  obterItensLista,
   UpdateItem,
 } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -35,9 +35,7 @@ const Itens = () => {
   const router = useRouter();
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState<string | null>(null);
-  const [showMomdalExcluir, setShowModalExcluit] = useState<string | null>(
-    null,
-  );
+  const [showModalExcluir, setShowModalExcluit] = useState<string | null>(null);
   const [atualizar, setAtualizar] = useState(0);
   const [itens, setItens] = useState<dadosItensType[]>();
   const { idLista, nomeLista, dataCriacao } = useLocalSearchParams<{
@@ -56,7 +54,7 @@ const Itens = () => {
         try {
           const buscarIntens = async () => {
             const { data: dataItens, error: errorDataItens } =
-              await GetItensLista({
+              await obterItensLista({
                 idDaLista: idLista,
               });
             if (errorDataItens) {
@@ -89,7 +87,7 @@ const Itens = () => {
   }, [nomeLista]);
 
   const adicionaritens = async ({ name }: { name: string }) => {
-    const { error: errorAddItem } = await AddItem({
+    const { error: errorAddItem } = await adicionarItem({
       lista_id: idLista,
       nome_item: name,
       status_item: "Item não compardo",
@@ -334,14 +332,14 @@ const Itens = () => {
             );
           })()}
 
-        {showMomdalExcluir &&
+        {showModalExcluir &&
           (() => {
-            const item = itens.find((i) => i.id === showMomdalExcluir)!;
+            const item = itens.find((i) => i.id === showModalExcluir)!;
             if (!item) return null;
             return (
               <ModalExcluir
                 idItem={item.id}
-                visible={!!showMomdalExcluir}
+                visible={!!showModalExcluir}
                 onCancel={() => setShowModalExcluit(null)}
                 onConfirm={(idItem) => excluirITemLista({ idItem })}
               />

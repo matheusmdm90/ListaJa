@@ -1,5 +1,5 @@
 import { useApp } from "@/Contexts/UserApp";
-import { Addlista, GetLista } from "@/utils/requisicao";
+import { Addlista, obterLista } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -28,7 +28,7 @@ const HomePage = () => {
       if (!user) return;
 
       const buscarLista = async () => {
-        const { data: dataLista, error: errorLista } = await GetLista({
+        const { data: dataLista, error: errorLista } = await obterLista({
           idUsuario: user.id,
         });
 

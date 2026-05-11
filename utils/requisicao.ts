@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 
 // fazer login auth supabase
@@ -18,7 +19,7 @@ export const fazerLogin = async ({
 
 // pegando os dados do usuario
 
-export const ContaUsuario = async ({ id_usuario }: { id_usuario?: string }) => {
+export const obterUsuario = async ({ id_usuario }: { id_usuario?: string }) => {
   let { data, error } = await supabase
     .from("user")
     .select("*")
@@ -56,7 +57,7 @@ export const CadastrarUsuario = async ({
 }: {
   nome: string;
   email: string;
-  user: any;
+  user: User;
 }) => {
   let { data, error } = await supabase
     .from("user")
@@ -83,7 +84,7 @@ export const Addlista = async ({
 
 // Pegar lista do usuario
 
-export const GetLista = async ({ idUsuario }: { idUsuario: string }) => {
+export const obterLista = async ({ idUsuario }: { idUsuario: string }) => {
   let { data, error } = await supabase
     .from("lista")
     .select("*")
@@ -93,7 +94,7 @@ export const GetLista = async ({ idUsuario }: { idUsuario: string }) => {
 
 // buscar o itens da lista
 
-export const GetItensLista = async ({ idDaLista }: { idDaLista: string }) => {
+export const obterItensLista = async ({ idDaLista }: { idDaLista: string }) => {
   let { data, error } = await supabase
     .from("item")
     .select("*")
@@ -105,7 +106,7 @@ export const GetItensLista = async ({ idDaLista }: { idDaLista: string }) => {
 
 // adicionat item
 
-export const AddItem = async ({
+export const adicionarItem = async ({
   nome_item,
   lista_id,
   status_item,
