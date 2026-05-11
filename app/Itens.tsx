@@ -165,7 +165,7 @@ const Itens = () => {
 
         <View>
           <Pressable>
-            <MaterialIcons name="more-vert" size={24} color={"#64748B"} />
+            <MaterialIcons name="delete" size={24} color={"#64748B"} />
           </Pressable>
         </View>
       </View>
@@ -217,7 +217,7 @@ const Itens = () => {
                       }}
                     >
                       <MaterialIcons
-                        name="more-vert"
+                        name="delete"
                         size={24}
                         color={"#64748B"}
                       />

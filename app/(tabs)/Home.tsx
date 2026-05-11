@@ -1,5 +1,5 @@
-import { useApp } from "@/Contexts/UserApp";
-import { Addlista, obterLista } from "@/utils/requisicao";
+import { useApp } from "../../Contexts/UserApp";
+
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Addlista, obterLista } from "../../utils/requisicao";
 import Inputs from "../Componets/inputs";
 import ModalAdicionar from "../Componets/Modals/ModalAdicionar/ModalAdicionar";
 
@@ -75,7 +76,7 @@ const HomePage = () => {
         <View>
           <Text style={styles.headerTexto1}>Minha Lista</Text>
           <Text style={styles.headerTexto2}>
-            Bem vindo de volta, {user.nome}
+            Bem vindo de volta, {user.nome.split(" ")[0]}
           </Text>
         </View>
 
