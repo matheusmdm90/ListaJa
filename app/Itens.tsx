@@ -17,9 +17,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ModalAdicionar from "./Componetes/Modals/ModalAdicionar/ModalAdicionar";
-import ModalExcluir from "./Componetes/Modals/ModalExcluir/ModalExcluir";
-import ModalItens from "./Componetes/Modals/ModalItens/ModalItens";
+import ModalAdicionar from "./Componets/Modals/ModalAdicionar/ModalAdicionar";
+import ModalExcluir from "./Componets/Modals/ModalExcluir/ModalExcluir";
+import ModalItens from "./Componets/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
   type dadosItensType = {

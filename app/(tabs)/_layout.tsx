@@ -1,4 +1,5 @@
 import { useApp } from "@/Contexts/UserApp";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 
 const TabsLayout = () => {
@@ -13,21 +14,42 @@ const TabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: 60, // altura da barra de tabs (diminuir)
+          height: 55, // altura da barra de tabs (diminuir)
           paddingBottom: 5, // ajuste do padding inferior
-          paddingTop: 2, // ajuste do padding superior
+          marginBottom: 5, // ajuste do padding superior
         },
         tabBarLabelStyle: {
           fontSize: 12, // diminui o tamanho do texto do label
         },
         tabBarIconStyle: {
-          marginTop: 5, // ajusta a posição do ícone
+          marginTop: 2, // ajusta a posição do ícone
         },
       }}
     >
-      <Tabs.Screen name="Home" />
-      <Tabs.Screen name="Concluidos" />
-      <Tabs.Screen name="Perfil" />
+      <Tabs.Screen
+        name="Home"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="home" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Concluidos"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="check-circle" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Perfil"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="person" size={28} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 };

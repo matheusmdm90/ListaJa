@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Inputs from "../Componetes/inputs";
+import Inputs from "../Componets/inputs";
 
 const Concluidos = () => {
   const router = useRouter();
