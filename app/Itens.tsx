@@ -1,10 +1,3 @@
-import { ITENS_SUPERMERCADO } from "@/data/dataItem";
-import {
-  adicionarItem,
-  excluirItem,
-  obterItensLista,
-  UpdateItem,
-} from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -17,6 +10,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ITENS_SUPERMERCADO } from "../data/dataItem";
+import {
+  adicionarItem,
+  excluirItem,
+  obterItensLista,
+  UpdateItem,
+} from "../utils/requisicao";
 import ModalAdicionar from "./Componets/Modals/ModalAdicionar/ModalAdicionar";
 import ModalExcluir from "./Componets/Modals/ModalExcluir/ModalExcluir";
 import ModalItens from "./Componets/Modals/ModalItens/ModalItens";

@@ -1,5 +1,3 @@
-import { CadastrarUsuario, fazerCadastro } from "@/utils/requisicao";
-
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -16,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CadastrarUsuario, fazerCadastro } from "../utils/requisicao";
 import Inputs from "./Componets/inputs";
 
 const Cadastro = () => {

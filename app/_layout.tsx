@@ -1,7 +1,7 @@
-import { UserAppProvider } from "@/Contexts/UserApp";
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { UserAppProvider } from "../Contexts/UserApp";
 
 export default function RootLayout() {
   return (

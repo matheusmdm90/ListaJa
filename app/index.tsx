@@ -1,5 +1,3 @@
-import { useApp } from "@/Contexts/UserApp";
-import { fazerLogin, obterUsuario } from "@/utils/requisicao";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -13,6 +11,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useApp } from "../Contexts/UserApp";
+import { fazerLogin, obterUsuario } from "../utils/requisicao";
 
 export default function Index() {
   const router = useRouter();

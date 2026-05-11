@@ -1,6 +1,6 @@
-import { useApp } from "@/Contexts/UserApp";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
+import { useApp } from "../../Contexts/UserApp";
 
 const TabsLayout = () => {
   const { user } = useApp();
