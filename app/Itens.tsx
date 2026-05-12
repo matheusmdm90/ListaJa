@@ -352,7 +352,7 @@ const Itens = () => {
           onCreate={(name) => adicionaritens({ name })}
           titulo="Novo Item"
           valor="Item"
-          placeholder="Ovo, Leite, Manteiga "
+          placeholder="Digite o nome do Item "
           sugestoes={listaSurgestao}
         />
       </View>

@@ -1,6 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
@@ -8,6 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -53,8 +56,13 @@ const ModalAdicionar = ({
   };
 
   const handleCreate = () => {
+    if (!name.trim()) {
+      alert("Por favor, digite um nome");
+      return;
+    }
     onCreate(name.trim());
     setName("");
+    setSugestoesVisiveis([]);
   };
 
   return (
@@ -66,82 +74,105 @@ const ModalAdicionar = ({
         onRequestClose={onCancel}
         backdropColor={"#1A1F2E50"}
       >
-        <View style={styles.backdrop}>
-          <View style={styles.container}>
-            <View
-              style={{
-                width: "100%",
-                alignItems: "flex-end",
-                justifyContent: "flex-start",
-              }}
-            >
-              <Pressable onPress={onCancel}>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={24}
-                  color="#bfc7d6"
-                />
-              </Pressable>
-            </View>
-
-            <Text style={styles.title}>{titulo ? titulo : "Nova Lista"}</Text>
-            <Text style={styles.subtitle}>
-              Defina um nome para começar a organizar.
-            </Text>
-
-            <Text style={styles.label}>NOME</Text>
-            <TextInput
-              value={name}
-              onChangeText={handleChangeText}
-              placeholder={`Ex: ${
-                placeholder ? placeholder : "Churrasco, Mercado Semana"
-              }`}
-              placeholderTextColor="#6b7380"
-              style={styles.input}
-              returnKeyType="done"
-            />
-
-            {/* 👇 lista de sugestões */}
-            {sugestoesVisiveis.length > 0 && (
-              <View style={styles.sugestoes}>
-                {sugestoesVisiveis.map((item) => (
-                  <Pressable
-                    key={item}
-                    style={styles.sugestaoItem}
-                    onPress={() => {
-                      setName(item);
-                      setSugestoesVisiveis([]);
-                    }}
-                  >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "padding"}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.backdrop}>
+              <View style={styles.container}>
+                <View
+                  style={{
+                    width: "100%",
+                    alignItems: "flex-end",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Pressable onPress={onCancel}>
                     <MaterialCommunityIcons
-                      name="magnify"
-                      size={16}
-                      color="#64748B"
+                      name="close"
+                      size={24}
+                      color="#bfc7d6"
                     />
-                    <Text style={styles.sugestaoTexto}>{item}</Text>
                   </Pressable>
-                ))}
-              </View>
-            )}
-
-            <View style={{ height: 12 }} />
-
-            <TouchableOpacity
-              style={styles.createButton}
-              activeOpacity={0.85}
-              onPress={handleCreate}
-            >
-              <View style={styles.createContent}>
-                <View style={styles.plusCircle}>
-                  <MaterialCommunityIcons name="plus" size={24} color="#ffff" />
                 </View>
-                <Text style={styles.createText}>
-                  Criar {valor ? valor : "Lista"}
+
+                <Text style={styles.title}>
+                  {titulo ? titulo : "Nova Lista"}
                 </Text>
+                <Text style={styles.subtitle}>
+                  Defina um nome para começar a organizar.
+                </Text>
+
+                <Text style={styles.label}>NOME</Text>
+                <View style={{ position: "relative" }}>
+                  <TextInput
+                    value={name}
+                    onChangeText={handleChangeText}
+                    placeholder={
+                      placeholder
+                        ? placeholder
+                        : "Ex: Churrasco, Mercado, Roupa"
+                    }
+                    placeholderTextColor="#6b7380"
+                    style={styles.input}
+                    returnKeyType="done"
+                  />
+
+                  {/* 👇 lista de sugestões */}
+                  {sugestoesVisiveis.length > 0 && (
+                    <View style={styles.sugestoes}>
+                      {sugestoesVisiveis.map((item, index) => (
+                        <Pressable
+                          key={item}
+                          style={[
+                            styles.sugestaoItem,
+                            index < sugestoesVisiveis.length - 1 && {
+                              borderBottomWidth: 1,
+                              borderBottomColor: "rgba(255,255,255,0.05)",
+                            },
+                          ]}
+                          onPress={() => {
+                            setName(item);
+                            setSugestoesVisiveis([]);
+                          }}
+                        >
+                          <MaterialCommunityIcons
+                            name="magnify"
+                            size={16}
+                            color="#64748B"
+                          />
+                          <Text style={styles.sugestaoTexto}>{item}</Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  )}
+                </View>
+
+                <View style={{ height: 12 }} />
+
+                <TouchableOpacity
+                  style={styles.createButton}
+                  activeOpacity={0.85}
+                  onPress={handleCreate}
+                >
+                  <View style={styles.createContent}>
+                    <View style={styles.plusCircle}>
+                      <MaterialCommunityIcons
+                        name="plus"
+                        size={24}
+                        color="#ffff"
+                      />
+                    </View>
+                    <Text style={styles.createText}>
+                      Criar {valor ? valor : "Lista"}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -228,12 +259,22 @@ const styles = StyleSheet.create({
   },
 
   sugestoes: {
+    position: "absolute", // flutua
+    top: "100%", // cola abaixo do input
+    left: 0,
+    right: 0,
+    marginTop: 6,
     backgroundColor: "#0f1420",
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.08)",
-    marginTop: 6,
     overflow: "hidden",
+    elevation: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    zIndex: 999,
   },
   sugestaoItem: {
     flexDirection: "row",

@@ -4,10 +4,14 @@ import { useState } from "react";
 import {
   Alert,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -57,79 +61,90 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.conatinerTitulo}>
-        <Image source={require("../assets/images/Logo.png")} />
-        <Text style={styles.titulo}>
-          Lista<Text style={styles.tituloDestacado}>Já</Text>
-        </Text>
-        <Text style={styles.textoSecundario}>Organize suas compras agora</Text>
-      </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#101422" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <View style={styles.conatinerTitulo}>
+              <Image source={require("../assets/images/Logo.png")} />
+              <Text style={styles.titulo}>
+                Lista<Text style={styles.tituloDestacado}>Já</Text>
+              </Text>
+              <Text style={styles.textoSecundario}>
+                Organize suas compras agora
+              </Text>
+            </View>
 
-      <View style={styles.inputContainer}>
-        <View>
-          <Text style={styles.inputText}>E-MAIL</Text>
+            <View style={styles.inputContainer}>
+              <View>
+                <Text style={styles.inputText}>E-MAIL</Text>
 
-          <View style={styles.boxInput}>
-            <MaterialIcons
-              name="alternate-email"
-              size={20}
-              color={"#FFFFFF30"}
-            />
-            <TextInput
-              placeholder="exemplo@email.com"
-              placeholderTextColor={"#FFFFFF30"}
-              keyboardType="email-address"
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-            />
-          </View>
-        </View>
-        <View>
-          <Text style={styles.inputText}>SENHA</Text>
+                <View style={styles.boxInput}>
+                  <MaterialIcons
+                    name="alternate-email"
+                    size={20}
+                    color={"#FFFFFF30"}
+                  />
+                  <TextInput
+                    placeholder="exemplo@email.com"
+                    placeholderTextColor={"#FFFFFF30"}
+                    keyboardType="email-address"
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                </View>
+              </View>
+              <View>
+                <Text style={styles.inputText}>SENHA</Text>
 
-          <View style={styles.boxInput}>
-            <MaterialIcons name="lock" size={20} color={"#FFFFFF30"} />
-            <TextInput
-              placeholder="••••••••"
-              placeholderTextColor={"#FFFFFF30"}
-              style={styles.input}
-              secureTextEntry={mostrarSenha}
-              value={senha}
-              onChangeText={setSenha}
-            />
-            <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
-              <MaterialIcons
-                name={mostrarSenha ? "visibility" : "visibility-off"}
-                size={20}
-                color={"#FFFFFF30"}
-              />
+                <View style={styles.boxInput}>
+                  <MaterialIcons name="lock" size={20} color={"#FFFFFF30"} />
+                  <TextInput
+                    placeholder="••••••••"
+                    placeholderTextColor={"#FFFFFF30"}
+                    style={styles.input}
+                    secureTextEntry={mostrarSenha}
+                    value={senha}
+                    onChangeText={setSenha}
+                  />
+                  <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
+                    <MaterialIcons
+                      name={mostrarSenha ? "visibility" : "visibility-off"}
+                      size={20}
+                      color={"#FFFFFF30"}
+                    />
+                  </Pressable>
+                </View>
+              </View>
+
+              <Text
+                style={styles.textRestPw}
+                onPress={() => router.push("./resetPasoword")}
+              >
+                Esqueceu a senha?
+              </Text>
+            </View>
+            <Pressable style={styles.btn} onPress={() => login()}>
+              <Text style={styles.btnText}>Entrar </Text>
+              <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
             </Pressable>
+
+            <View style={styles.cadastro}>
+              <Text style={styles.textoCadastro1}>Não tem uma conta?</Text>
+              <Text
+                style={styles.textoCadastro2}
+                onPress={() => router.push("/Cadastro")}
+              >
+                Cadastre-se
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <Text
-          style={styles.textRestPw}
-          onPress={() => router.push("./resetPasoword")}
-        >
-          Esqueceu a senha?
-        </Text>
-      </View>
-      <Pressable style={styles.btn} onPress={() => login()}>
-        <Text style={styles.btnText}>Entrar </Text>
-        <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
-      </Pressable>
-
-      <View style={styles.cadastro}>
-        <Text style={styles.textoCadastro1}>Não tem uma conta?</Text>
-        <Text
-          style={styles.textoCadastro2}
-          onPress={() => router.push("/Cadastro")}
-        >
-          Cadastre-se
-        </Text>
-      </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
