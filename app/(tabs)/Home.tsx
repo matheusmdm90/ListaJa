@@ -131,7 +131,9 @@ const HomePage = () => {
                   </View>
                   <View>
                     <Text style={styles.textBoxLista1}>{lista.nome_Lista}</Text>
-                    <Text style={styles.textBoxLista2}>{lista.created_at}</Text>
+                    <Text style={styles.textBoxLista2}>
+                      {new Date(lista.created_at).toLocaleDateString("pt-br")}
+                    </Text>
                   </View>
                 </View>
                 <View>

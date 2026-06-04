@@ -161,7 +161,9 @@ const Itens = () => {
           <View>
             <Text style={styles.textHeadrd1}>{nomeLista}</Text>
 
-            <Text style={styles.textHeadrd2}>{dataCriacao}</Text>
+            <Text style={styles.textHeadrd2}>
+              {new Date(dataCriacao).toLocaleDateString("pt-br")}
+            </Text>
           </View>
         </View>
 
