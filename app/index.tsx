@@ -2,6 +2,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Image,
   Keyboard,
@@ -24,6 +25,7 @@ export default function Index() {
   const [mostrarSenha, setMostrarSenha] = useState(true);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
   const { dadosLogin } = useApp();
 
   const login = async () => {
@@ -31,6 +33,7 @@ export default function Index() {
       Alert.alert("Erro", "Email obrigatório");
       return;
     }
+    setLoading(true);
     try {
       const { data, error } = await fazerLogin({
         email,
@@ -57,6 +60,8 @@ export default function Index() {
     } catch (err) {
       console.log(err);
       Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -128,9 +133,23 @@ export default function Index() {
                 Esqueceu a senha?
               </Text>
             </View>
-            <Pressable style={styles.btn} onPress={() => login()}>
-              <Text style={styles.btnText}>Entrar </Text>
-              <MaterialIcons name="arrow-forward" color={"#ffff"} size={16} />
+            <Pressable
+              style={[styles.btn, loading && { opacity: 0.6 }]}
+              onPress={() => login()}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Text style={styles.btnText}>Entrar </Text>
+                  <MaterialIcons
+                    name="arrow-forward"
+                    color={"#ffff"}
+                    size={16}
+                  />
+                </>
+              )}
             </Pressable>
 
             <View style={styles.cadastro}>
