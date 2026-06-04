@@ -1,6 +1,7 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -20,7 +21,11 @@ interface ModalProps {
   valorAtual: number;
   quantidadeAtual: number;
   onRequestClose?: () => void;
-  onCreate: (quantidade: number, valor: number, idItem: string) => void;
+  onCreate: (
+    quantidade: number,
+    valor: number,
+    idItem: string,
+  ) => Promise<void>;
 }
 
 const ModalItens = ({
@@ -36,10 +41,16 @@ const ModalItens = ({
     quantidadeAtual ? quantidadeAtual : 1,
   );
   const [valor, setValor] = useState(valorAtual ? `${valorAtual}` : "");
+  const [loading, setLoading] = useState(false);
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     // transforma entring em number
-    onCreate(quantidade, parseFloat(valor.replace(",", ".")), idItem);
+    setLoading(true);
+    try {
+      await onCreate(quantidade, parseFloat(valor.replace(",", ".")), idItem);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -131,8 +142,16 @@ const ModalItens = ({
                     </View>
                   </View>
 
-                  <Pressable style={styles.btnConfirmar} onPress={handleUpdate}>
-                    <Text>Confirmar</Text>
+                  <Pressable
+                    style={[styles.btnConfirmar, loading && { opacity: 0.6 }]}
+                    onPress={handleUpdate}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <ActivityIndicator color="#fff" />
+                    ) : (
+                      <Text>Confirmar</Text>
+                    )}
                   </Pressable>
                 </View>
               </View>

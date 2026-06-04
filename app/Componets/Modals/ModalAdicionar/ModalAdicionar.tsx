@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -16,7 +17,7 @@ import {
 
 type Props = {
   visible: boolean;
-  onCreate: (name: string) => void;
+  onCreate: (name: string) => Promise<void>;
   onCancel: () => void;
   titulo?: string;
   // valor você vai dizer oque quer cria
@@ -39,6 +40,7 @@ const ModalAdicionar = ({
   sugestoes,
 }: Props) => {
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [sugestoesVisiveis, setSugestoesVisiveis] = useState<string[]>([]);
 
@@ -55,14 +57,20 @@ const ModalAdicionar = ({
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!name.trim()) {
       alert("Por favor, digite um nome");
       return;
     }
-    onCreate(name.trim());
-    setName("");
-    setSugestoesVisiveis([]);
+
+    setLoading(true);
+    try {
+      await onCreate(name.trim());
+      setName("");
+      setSugestoesVisiveis([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -152,22 +160,27 @@ const ModalAdicionar = ({
                 <View style={{ height: 12 }} />
 
                 <TouchableOpacity
-                  style={styles.createButton}
+                  style={[styles.createButton, loading && { opacity: 0.6 }]}
                   activeOpacity={0.85}
                   onPress={handleCreate}
+                  disabled={loading}
                 >
-                  <View style={styles.createContent}>
-                    <View style={styles.plusCircle}>
-                      <MaterialCommunityIcons
-                        name="plus"
-                        size={24}
-                        color="#ffff"
-                      />
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <View style={styles.createContent}>
+                      <View style={styles.plusCircle}>
+                        <MaterialCommunityIcons
+                          name="plus"
+                          size={24}
+                          color="#ffff"
+                        />
+                      </View>
+                      <Text style={styles.createText}>
+                        Criar {valor ? valor : "Lista"}
+                      </Text>
                     </View>
-                    <Text style={styles.createText}>
-                      Criar {valor ? valor : "Lista"}
-                    </Text>
-                  </View>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
