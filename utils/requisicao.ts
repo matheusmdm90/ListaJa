@@ -99,6 +99,7 @@ export const obterItensLista = async ({ idDaLista }: { idDaLista: string }) => {
     .from("item")
     .select("*")
     .eq("lista_id", idDaLista)
+    .order("order_status", { ascending: true })
     .order("created_at", { ascending: true });
 
   return { data, error };
@@ -127,14 +128,18 @@ export const UpdateItem = async ({
   quantidade,
   valor_item,
   idItem,
+  status_item,
+  order_status,
 }: {
   quantidade: number;
   valor_item: number;
   idItem: string;
+  status_item: string;
+  order_status: number;
 }) => {
   let { data, error } = await supabase
     .from("item")
-    .update({ quantidade, valor_item })
+    .update({ quantidade, valor_item, status_item, order_status })
     .eq("id", idItem)
     .select();
 

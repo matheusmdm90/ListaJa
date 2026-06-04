@@ -30,6 +30,7 @@ const Itens = () => {
     valor_item?: number;
     lista_id: string;
     status_item: string;
+    order_status: number;
   };
 
   const router = useRouter();
@@ -112,6 +113,8 @@ const Itens = () => {
         idItem: idItem,
         quantidade: quantidade,
         valor_item: valor,
+        status_item: "Item comprado",
+        order_status: 1,
       });
       if (errorAoAtualizar) {
         Alert.alert("Erro ao adicionar item", errorAoAtualizar?.message);
@@ -203,7 +206,12 @@ const Itens = () => {
                     </View>
                     <View>
                       <Text style={styles.textBoxItens1}>{item.nome_item}</Text>
-                      <Text style={styles.textBoxItens2}>
+                      <Text
+                        style={[
+                          styles.textBoxItens2,
+                          item.order_status === 1 && styles.itemComprado,
+                        ]}
+                      >
                         {item.status_item}
                       </Text>
                     </View>
@@ -521,6 +529,10 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
 
     textAlign: "center",
+  },
+
+  itemComprado: {
+    color: "#49ca65",
   },
 });
 
