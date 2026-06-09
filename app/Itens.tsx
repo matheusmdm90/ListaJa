@@ -301,6 +301,53 @@ const Itens = () => {
           </ScrollView>
         )}
       </View>
+      {/* modal dos dados do itens  */}
+
+      {itemSelecionado &&
+        (() => {
+          const item = itens.find((i) => i.id === itemSelecionado)!; // acha o item pelo id
+
+          if (!item) return null;
+
+          return (
+            <ModalItens
+              idItem={item.id}
+              nomeItem={item.nome_item}
+              valorAtual={item.valor_item ?? 0}
+              quantidadeAtual={item.quantidade ?? 0}
+              visible={!!itemSelecionado}
+              onRequestClose={() => setItemSelecionado(null)}
+              onCreate={(quantidade, valor, idItem) =>
+                atualizarItem({ quantidade, valor, idItem })
+              }
+            />
+          );
+        })()}
+
+      {showModalExcluir &&
+        (() => {
+          const item = itens.find((i) => i.id === showModalExcluir)!;
+          if (!item) return null;
+          return (
+            <ModalExcluir
+              idItem={item.id}
+              visible={!!showModalExcluir}
+              onCancel={() => setShowModalExcluit(null)}
+              onConfirm={(idItem) => excluirITemLista({ idItem })}
+            />
+          );
+        })()}
+
+      {/* modal adicionar item  */}
+      <ModalAdicionar
+        visible={showModalAdd}
+        onCancel={() => setShowModalAdd(false)}
+        onCreate={(name) => adicionaritens({ name })}
+        titulo="Novo Item"
+        valor="Item"
+        placeholder="Digite o nome do Item "
+        sugestoes={listaSurgestao}
+      />
 
       <View style={styles.btnAddPosition}>
         <View style={styles.abaTotal}>
@@ -317,54 +364,6 @@ const Itens = () => {
         <Pressable style={styles.btnAdd} onPress={() => setShowModalAdd(true)}>
           <MaterialIcons name="add" color={"#FFFF"} size={36} />
         </Pressable>
-
-        {/* modal dos dados do itens  */}
-
-        {itemSelecionado &&
-          (() => {
-            const item = itens.find((i) => i.id === itemSelecionado)!; // acha o item pelo id
-
-            if (!item) return null;
-
-            return (
-              <ModalItens
-                idItem={item.id}
-                nomeItem={item.nome_item}
-                valorAtual={item.valor_item ?? 0}
-                quantidadeAtual={item.quantidade ?? 0}
-                visible={!!itemSelecionado}
-                onRequestClose={() => setItemSelecionado(null)}
-                onCreate={(quantidade, valor, idItem) =>
-                  atualizarItem({ quantidade, valor, idItem })
-                }
-              />
-            );
-          })()}
-
-        {showModalExcluir &&
-          (() => {
-            const item = itens.find((i) => i.id === showModalExcluir)!;
-            if (!item) return null;
-            return (
-              <ModalExcluir
-                idItem={item.id}
-                visible={!!showModalExcluir}
-                onCancel={() => setShowModalExcluit(null)}
-                onConfirm={(idItem) => excluirITemLista({ idItem })}
-              />
-            );
-          })()}
-
-        {/* modal adicionar item  */}
-        <ModalAdicionar
-          visible={showModalAdd}
-          onCancel={() => setShowModalAdd(false)}
-          onCreate={(name) => adicionaritens({ name })}
-          titulo="Novo Item"
-          valor="Item"
-          placeholder="Digite o nome do Item "
-          sugestoes={listaSurgestao}
-        />
       </View>
     </SafeAreaView>
   );

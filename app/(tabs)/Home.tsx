@@ -97,56 +97,60 @@ const HomePage = () => {
           <Text style={styles.textoLista}>Listas</Text>
         </View>
 
-        {!listas || listas.length === 0 ? (
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.listaVazia}>Sua lista está vazia.</Text>
-            <Text style={styles.listaVazia}>
-              Que tal adicionar sua primeira Lista?
-            </Text>
-          </View>
-        ) : (
-          <ScrollView>
-            {listas.map((lista) => (
-              <Pressable
-                style={styles.boxLista}
-                onPress={() =>
-                  router.push({
-                    pathname: "/Itens",
-                    params: {
-                      idLista: lista.id,
-                      nomeLista: lista.nome_Lista,
-                      dataCriacao: lista.created_at,
-                    },
-                  })
-                }
-                key={lista.id}
-              >
-                <View style={{ flexDirection: "row", gap: 16 }}>
-                  <View style={styles.IconBoxLista}>
-                    <MaterialIcons
-                      name="shopping-cart"
-                      color={"#3B82F6"}
-                      size={24}
-                    />
+        <View style={{ width: "100%", height: "100%", paddingBottom: 120 }}>
+          {!listas || listas.length === 0 ? (
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.listaVazia}>Sua lista está vazia.</Text>
+              <Text style={styles.listaVazia}>
+                Que tal adicionar sua primeira Lista?
+              </Text>
+            </View>
+          ) : (
+            <ScrollView>
+              {listas.map((lista) => (
+                <Pressable
+                  style={styles.boxLista}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/Itens",
+                      params: {
+                        idLista: lista.id,
+                        nomeLista: lista.nome_Lista,
+                        dataCriacao: lista.created_at,
+                      },
+                    })
+                  }
+                  key={lista.id}
+                >
+                  <View style={{ flexDirection: "row", gap: 16 }}>
+                    <View style={styles.IconBoxLista}>
+                      <MaterialIcons
+                        name="shopping-cart"
+                        color={"#3B82F6"}
+                        size={24}
+                      />
+                    </View>
+                    <View>
+                      <Text style={styles.textBoxLista1}>
+                        {lista.nome_Lista}
+                      </Text>
+                      <Text style={styles.textBoxLista2}>
+                        {new Date(lista.created_at).toLocaleDateString("pt-br")}
+                      </Text>
+                    </View>
                   </View>
                   <View>
-                    <Text style={styles.textBoxLista1}>{lista.nome_Lista}</Text>
-                    <Text style={styles.textBoxLista2}>
-                      {new Date(lista.created_at).toLocaleDateString("pt-br")}
-                    </Text>
+                    <MaterialIcons
+                      name="keyboard-arrow-right"
+                      size={24}
+                      color={"#3B82F6"}
+                    />
                   </View>
-                </View>
-                <View>
-                  <MaterialIcons
-                    name="keyboard-arrow-right"
-                    size={24}
-                    color={"#3B82F6"}
-                  />
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-        )}
+                </Pressable>
+              ))}
+            </ScrollView>
+          )}
+        </View>
       </View>
 
       <View style={styles.btnAddPosition}>
@@ -210,7 +214,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#FFFFFF15",
     borderRadius: 16,
-    marginTop: 13,
+    marginTop: 10,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
