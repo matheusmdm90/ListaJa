@@ -14,6 +14,7 @@ import { ITENS_SUPERMERCADO } from "../data/dataItem";
 import {
   adicionarItem,
   excluirItem,
+  excluirLista,
   obterItensLista,
   UpdateItem,
 } from "../utils/requisicao";
@@ -150,6 +151,22 @@ const Itens = () => {
     setAtualizar((prev) => prev + 1);
   };
 
+  const deletarLista = async () => {
+    try {
+      const { error: erroDeletarLista } = await excluirLista({
+        idLista,
+      });
+
+      if (erroDeletarLista) {
+        throw new Error("não foi possivel excluir a lista ");
+      }
+      console.log("Lista excluida com sucesso");
+      router.back();
+    } catch (erro) {
+      console.log(erro);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -168,7 +185,7 @@ const Itens = () => {
         </View>
 
         <View>
-          <Pressable>
+          <Pressable onPress={deletarLista}>
             <MaterialIcons name="delete" size={24} color={"#64748B"} />
           </Pressable>
         </View>

@@ -153,3 +153,13 @@ export const excluirItem = async ({ idItem }: { idItem: string }) => {
 
   return { error };
 };
+
+export const excluirLista = async ({ idLista }: { idLista: string }) => {
+  let { data, error } = await supabase
+    .from("lista")
+    .delete()
+    .eq("id", idLista)
+    .select();
+
+  return { data, error };
+};
