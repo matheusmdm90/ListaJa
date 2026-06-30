@@ -43,7 +43,3 @@ app-example
 # generated native folders
 /ios
 /android
-
-#eas
-eas.json
-app.json

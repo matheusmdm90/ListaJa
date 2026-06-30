@@ -22,7 +22,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.losck.listaja"
+      "package": "com.losck.listaja",
+      "versionCode": 3
     },
     "platforms": [
       "android",

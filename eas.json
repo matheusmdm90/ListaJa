@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 18.11.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "sua_url_aqui",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sua_chave_aqui"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "sua_url_aqui",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sua_chave_aqui"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://dumamdqqaurdchjkyfiq.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_pd7JgJLsA0tAA2gm1iH2aQ_VyiBemGa"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
