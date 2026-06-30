@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -16,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { useApp } from "../Contexts/UserApp";
 import { fazerLogin, obterUsuario } from "../utils/requisicao";
 
@@ -30,7 +30,13 @@ export default function Index() {
 
   const login = async () => {
     if (!email?.trim()) {
-      Alert.alert("Erro", "Email obrigatório");
+      Toast.show({
+        type: "Erros",
+        text1: "Erro ao entrar!",
+        text2: "Email Obrigatorio",
+        position: "top", // 'top' ou 'bottom'
+        visibilityTime: 3000, // 3 segundos
+      });
       return;
     }
     setLoading(true);
@@ -39,27 +45,60 @@ export default function Index() {
         email,
         password: senha,
       });
+
       if (error) {
-        Alert.alert("Erro ao Entrar", error.message);
-        return;
+        throw error;
       }
+
       const id = data.user?.id;
 
       const { data: dadosUser, error: errorDadosUser } = await obterUsuario({
         id_usuario: id,
       });
       if (errorDadosUser) {
-        Alert.alert("Erro ao Entrar", errorDadosUser.message);
-        console.log(id);
-        return;
+        throw errorDadosUser;
       }
 
-      Alert.alert("login Efetuado com SUCESSO! ");
+      Toast.show({
+        type: "sucesso2",
+        text1: "Sucesso!",
+        text2: "Seu login foi realizado com sucesso.",
+        position: "top", // 'top' ou 'bottom'
+        visibilityTime: 3000, // 3 segundos
+      });
       dadosLogin(dadosUser);
       router.push("/(tabs)/Home");
-    } catch (err) {
-      console.log(err);
-      Alert.alert("Erro", "Não foi possível conectar. Verifique sua internet.");
+    } catch (err: any) {
+      if (err?.status === 400) {
+        Toast.show({
+          type: "Erros",
+          text1: "Erro ao entrar!",
+          text2: "Login e senha estão incorretos.",
+          position: "top", // 'top' ou 'bottom'
+          visibilityTime: 3000, // 3 segundos
+        });
+        return;
+      }
+      if (err?.status === 0) {
+        Toast.show({
+          type: "Erros",
+          text1: "Erro ao entrar!",
+          text2: "Sem acesso a intenet",
+          position: "top", // 'top' ou 'bottom'
+          visibilityTime: 3000, // 3 segundos
+        });
+
+        return;
+      }
+      if (err) {
+        Toast.show({
+          type: "Erros",
+          text1: "Erro ao entrar!",
+          text2: "usuario não encontrado",
+          position: "top", // 'top' ou 'bottom'
+          visibilityTime: 3000, // 3 segundos
+        });
+      }
     } finally {
       setLoading(false);
     }
