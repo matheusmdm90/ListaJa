@@ -10,6 +10,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ModalAdicionar from "../Componets/Modals/ModalAdicionar/ModalAdicionar";
+import ModalExcluir from "../Componets/Modals/ModalExcluir/ModalExcluir";
+import ModalItens from "../Componets/Modals/ModalItens/ModalItens";
 import { ITENS_SUPERMERCADO } from "../data/dataItem";
 import {
   adicionarItem,
@@ -18,9 +21,6 @@ import {
   obterItensLista,
   UpdateItem,
 } from "../utils/requisicao";
-import ModalAdicionar from "./Componets/Modals/ModalAdicionar/ModalAdicionar";
-import ModalExcluir from "./Componets/Modals/ModalExcluir/ModalExcluir";
-import ModalItens from "./Componets/Modals/ModalItens/ModalItens";
 
 const Itens = () => {
   type dadosItensType = {

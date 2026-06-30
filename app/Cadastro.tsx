@@ -15,8 +15,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Inputs from "../Componets/inputs";
 import { CadastrarUsuario, fazerCadastro } from "../utils/requisicao";
-import Inputs from "./Componets/inputs";
 
 const Cadastro = () => {
   const router = useRouter();
