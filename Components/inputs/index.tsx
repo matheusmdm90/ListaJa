@@ -1,12 +1,20 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardTypeOptions,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 interface inputsPropsType {
   nomeInput?: string;
   placeholder: string;
   IconName?: string;
   value?: string;
+  keyboardType?: KeyboardTypeOptions;
   onChangeText?: (text: string) => void;
 }
 
@@ -15,15 +23,21 @@ const Inputs = ({
   IconName,
   nomeInput,
   value,
+  keyboardType,
   onChangeText,
 }: inputsPropsType) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  const isPasswordField =
-    nomeInput === "Senha" ||
-    nomeInput === "Confirme sua senha" ||
-    nomeInput === "Passwold" ||
-    nomeInput === "Confirme seu Passwold";
+  const PASSWORD_FIELD_NAMES = [
+    "senha",
+    "confirme sua senha",
+    "password",
+    "confirme seu password",
+  ];
+
+  const isPasswordField = PASSWORD_FIELD_NAMES.includes(
+    nomeInput?.toLowerCase() ?? "",
+  );
 
   return (
     <View>
@@ -39,6 +53,7 @@ const Inputs = ({
           style={styles.input}
           secureTextEntry={isPasswordField && !mostrarSenha}
           value={value}
+          keyboardType={keyboardType}
           onChangeText={onChangeText}
         />
         {isPasswordField && (

@@ -13,8 +13,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Inputs from "../../Componets/inputs";
-import ModalAdicionar from "../../Componets/Modals/ModalAdicionar/ModalAdicionar";
+import Inputs from "../../Components/inputs";
+import ModalAdicionar from "../../Components/Modals/ModalAdicionar/ModalAdicionar";
 import { Addlista, obterLista } from "../../utils/requisicao";
 
 const HomePage = () => {

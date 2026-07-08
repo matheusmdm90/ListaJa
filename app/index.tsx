@@ -1,28 +1,25 @@
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import Botao from "../Components/Botao";
+import Inputs from "../Components/inputs";
+import Logo from "../Components/Logo";
 import { useApp } from "../Contexts/UserApp";
+import erros from "../utils/errors";
 import { fazerLogin, obterUsuario } from "../utils/requisicao";
 
 export default function Index() {
   const router = useRouter();
-
-  const [mostrarSenha, setMostrarSenha] = useState(true);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,38 +64,9 @@ export default function Index() {
         visibilityTime: 3000, // 3 segundos
       });
       dadosLogin(dadosUser);
-      router.push("/(tabs)/Home");
-    } catch (err: any) {
-      if (err?.status === 400) {
-        Toast.show({
-          type: "Erros",
-          text1: "Erro ao entrar!",
-          text2: "Login e senha estão incorretos.",
-          position: "top", // 'top' ou 'bottom'
-          visibilityTime: 3000, // 3 segundos
-        });
-        return;
-      }
-      if (err?.status === 0) {
-        Toast.show({
-          type: "Erros",
-          text1: "Erro ao entrar!",
-          text2: "Sem acesso a intenet",
-          position: "top", // 'top' ou 'bottom'
-          visibilityTime: 3000, // 3 segundos
-        });
-
-        return;
-      }
-      if (err) {
-        Toast.show({
-          type: "Erros",
-          text1: "Erro ao entrar!",
-          text2: "usuario não encontrado",
-          position: "top", // 'top' ou 'bottom'
-          visibilityTime: 3000, // 3 segundos
-        });
-      }
+      router.replace("/(tabs)/Home");
+    } catch (erro: any) {
+      erros(erro);
     } finally {
       setLoading(false);
     }
@@ -112,58 +80,25 @@ export default function Index() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-            <View style={styles.conatinerTitulo}>
-              <Image source={require("../assets/images/Logo.png")} />
-              <Text style={styles.titulo}>
-                Lista<Text style={styles.tituloDestacado}>Já</Text>
-              </Text>
-              <Text style={styles.textoSecundario}>
-                Organize suas compras agora
-              </Text>
-            </View>
+            <Logo />
 
             <View style={styles.inputContainer}>
-              <View>
-                <Text style={styles.inputText}>E-MAIL</Text>
+              <Inputs
+                placeholder="exemplo@email.com"
+                IconName="alternate-email"
+                onChangeText={setEmail}
+                value={email}
+                nomeInput="E-MAIL"
+                keyboardType="email-address"
+              />
 
-                <View style={styles.boxInput}>
-                  <MaterialIcons
-                    name="alternate-email"
-                    size={20}
-                    color={"#FFFFFF30"}
-                  />
-                  <TextInput
-                    placeholder="exemplo@email.com"
-                    placeholderTextColor={"#FFFFFF30"}
-                    keyboardType="email-address"
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                  />
-                </View>
-              </View>
-              <View>
-                <Text style={styles.inputText}>SENHA</Text>
-
-                <View style={styles.boxInput}>
-                  <MaterialIcons name="lock" size={20} color={"#FFFFFF30"} />
-                  <TextInput
-                    placeholder="••••••••"
-                    placeholderTextColor={"#FFFFFF30"}
-                    style={styles.input}
-                    secureTextEntry={mostrarSenha}
-                    value={senha}
-                    onChangeText={setSenha}
-                  />
-                  <Pressable onPress={() => setMostrarSenha(!mostrarSenha)}>
-                    <MaterialIcons
-                      name={mostrarSenha ? "visibility" : "visibility-off"}
-                      size={20}
-                      color={"#FFFFFF30"}
-                    />
-                  </Pressable>
-                </View>
-              </View>
+              <Inputs
+                nomeInput="SENHA"
+                placeholder="••••••••"
+                IconName="lock"
+                value={senha}
+                onChangeText={setSenha}
+              />
 
               <Text
                 style={styles.textRestPw}
@@ -172,24 +107,13 @@ export default function Index() {
                 Esqueceu a senha?
               </Text>
             </View>
-            <Pressable
-              style={[styles.btn, loading && { opacity: 0.6 }]}
-              onPress={() => login()}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <>
-                  <Text style={styles.btnText}>Entrar </Text>
-                  <MaterialIcons
-                    name="arrow-forward"
-                    color={"#ffff"}
-                    size={16}
-                  />
-                </>
-              )}
-            </Pressable>
+
+            <Botao
+              loading={loading}
+              login={login}
+              nomeBtn="Entrar"
+              nameIcon="arrow-forward"
+            />
 
             <View style={styles.cadastro}>
               <Text style={styles.textoCadastro1}>Não tem uma conta?</Text>
@@ -216,57 +140,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  conatinerTitulo: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  titulo: {
-    color: "#ffff",
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-
-  tituloDestacado: {
-    color: "#2559F4",
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-
-  textoSecundario: {
-    color: "#ffffff50",
-    fontSize: 14,
-  },
-
-  boxInput: {
-    width: 350,
-    height: 56,
-    borderWidth: 1,
-    borderRadius: 99,
-    borderColor: "#FFFFFF40",
-    backgroundColor: "#FFFFFF20",
-    paddingHorizontal: 10,
-    color: "#ffff",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-
-  input: {
-    width: 260,
-    height: 56,
-    fontSize: 16,
-    color: "#ffff",
-  },
-
-  inputText: {
-    color: "#FFFFFF70",
-    fontSize: 12,
-    fontWeight: "600",
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-
   inputContainer: {
     gap: 10,
     marginTop: 10,
@@ -277,34 +150,6 @@ const styles = StyleSheet.create({
     left: 220,
     fontSize: 12,
     fontWeight: 400,
-  },
-
-  btn: {
-    width: "80%",
-    height: 56,
-    backgroundColor: "#2559F4",
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 2,
-    marginTop: 16,
-
-    shadowColor: "#2559F4",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-
-    // por a sombrar na parte de baixo do android
-
-    elevation: 4,
-  },
-
-  btnText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#ffffff",
-    textAlign: "center",
   },
 
   cadastro: {
