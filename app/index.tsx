@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Botao from "../Components/Botao";
-import Inputs from "../Components/inputs";
+import Inputs from "../Components/Inputs";
 import Logo from "../Components/Logo";
 import useLogin from "../hooks/useLogin";
 

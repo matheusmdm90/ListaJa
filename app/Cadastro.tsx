@@ -1,9 +1,6 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -15,94 +12,27 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Inputs from "../Components/inputs";
-import { CadastrarUsuario, fazerCadastro } from "../utils/requisicao";
+import Inputs from "../Components/Inputs";
+
+import Botao from "../Components/Botao";
+import { useCadastro } from "../hooks/useCadastro";
 
 const Cadastro = () => {
+  const {
+    criarCadastro,
+    setNome,
+    setConfirmeEmail,
+    setEmail,
+    setConfirmeSenha,
+    setSenha,
+    loading,
+    nome,
+    confirmeEmail,
+    email,
+    confirmeSenha,
+    senha,
+  } = useCadastro();
   const router = useRouter();
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [confirmeEmail, setConfirmeEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [confirmeSenha, setConfirmeSenha] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const criarCadastro = async () => {
-    if (loading) return;
-
-    // Validação de e-mail
-    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (!email || !emailRegex.test(email)) {
-      Alert.alert("E-mail inválido", "Por favor, insira um e-mail válido.");
-      return;
-    }
-
-    if (email !== confirmeEmail) {
-      Alert.alert(
-        "E-mails não conferem",
-        "O e-mail e a confirmação precisam ser iguais.",
-      );
-      return;
-    }
-
-    // Validação de senha
-    if (!senha || senha.length < 8) {
-      Alert.alert(
-        "Senha inválida",
-        "A senha deve ter pelo menos 8 caracteres.",
-      );
-      return;
-    }
-
-    if (senha !== confirmeSenha) {
-      Alert.alert(
-        "Senhas não conferem",
-        "A senha e a confirmação precisam ser iguais.",
-      );
-      return;
-    }
-    setLoading(true);
-
-    try {
-      const { data: usuarioSupabase } = await fazerCadastro({
-        email: email,
-        password: senha,
-        name: nome,
-      });
-      if (!usuarioSupabase || !usuarioSupabase.user) {
-        Alert.alert("Erro", "Usuário não encontrado");
-        return;
-      } else {
-        const { error: erroCadastrarUsuario } = await CadastrarUsuario({
-          email: email,
-          nome: nome,
-          user: usuarioSupabase.user,
-        });
-        if (erroCadastrarUsuario) {
-          Alert.alert(
-            "Erro ao cadastrar usuario",
-
-            erroCadastrarUsuario.message,
-          );
-          return;
-        }
-        Alert.alert("Sucesso", "Cadastro válido. Prosseguir com registro.");
-        router.push("/");
-        setConfirmeEmail("");
-        setNome("");
-        setEmail("");
-        setConfirmeSenha("");
-        setSenha("");
-      }
-    } catch {
-      Alert.alert(
-        "Erro de conexão",
-        "Verifique sua internet e tente novamente.",
-      );
-    } finally {
-      setLoading(false); // 👈 sempre desliga o loading, mesmo se der erro
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,14 +66,14 @@ const Cadastro = () => {
                 placeholder="digite teu email"
                 IconName="email"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(texto) => setEmail(texto.toLowerCase())}
               />
               <Inputs
                 nomeInput="Confirme seu E-Mail"
                 placeholder="Confirme seu E-Mail"
                 IconName="mark-email-read"
                 value={confirmeEmail}
-                onChangeText={setConfirmeEmail}
+                onChangeText={(texto) => setConfirmeEmail(texto.toLowerCase())}
               />
 
               <Inputs
@@ -163,24 +93,12 @@ const Cadastro = () => {
             </View>
 
             <View style={styles.btnContainer}>
-              <Pressable
-                style={[styles.btn, loading && { opacity: 0.6 }]}
-                onPress={criarCadastro}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <>
-                    <Text style={styles.btnText}>Cadastrar </Text>
-                    <MaterialIcons
-                      name="arrow-forward"
-                      color={"#ffff"}
-                      size={16}
-                    />
-                  </>
-                )}
-              </Pressable>
+              <Botao
+                nomeBtn="Cadastrar"
+                loading={loading}
+                login={criarCadastro}
+                nameIcon="arrow-forward"
+              />
             </View>
 
             <View style={styles.cadastro}>

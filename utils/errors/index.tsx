@@ -31,6 +31,16 @@ const erros = (erro: any) => {
       visibilityTime: 3000, // 3 segundos
     });
   }
+
+  if (erro?.code === 23505) {
+    Toast.show({
+      type: "Erros",
+      text1: "Erro ao cadastra usuario!",
+      text2: "usuario ja existe",
+      position: "top", // 'top' ou 'bottom'
+      visibilityTime: 3000, // 3 segundos
+    });
+  }
 };
 
 export default erros;
