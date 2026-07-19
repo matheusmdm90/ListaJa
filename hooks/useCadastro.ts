@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
-import erros from "../utils/errors";
+import { erros } from "../utils/errors";
 import { CadastrarUsuario, fazerCadastro } from "../utils/requisicao";
 
 import { toastsucesso } from "../Components/Toast/toast";

@@ -14,6 +14,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../../Toast/toastConfig";
 
 type Props = {
   visible: boolean;
@@ -82,6 +84,7 @@ const ModalAdicionar = ({
         onRequestClose={onCancel}
         backdropColor={"#1A1F2E50"}
       >
+        <Toast config={toastConfig} />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "padding"}
           style={{ flex: 1 }}

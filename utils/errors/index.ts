@@ -22,15 +22,6 @@ const erros = (erro: any) => {
 
     return;
   }
-  if (erro) {
-    Toast.show({
-      type: "Erros",
-      text1: "Erro ao entrar!",
-      text2: "usuario não encontrado",
-      position: "top", // 'top' ou 'bottom'
-      visibilityTime: 3000, // 3 segundos
-    });
-  }
 
   if (erro?.code === 23505) {
     Toast.show({
@@ -40,6 +31,18 @@ const erros = (erro: any) => {
       position: "top", // 'top' ou 'bottom'
       visibilityTime: 3000, // 3 segundos
     });
+  }
+
+  if (erro) {
+    console.log("erro não rastreado", erro.message);
+    Toast.show({
+      type: "Erros",
+      text1: "Ops! Algo deu errado",
+      text2: "Tente novamente mais tarde.",
+      position: "top",
+      visibilityTime: 4000,
+    });
+    return;
   }
 };
 

@@ -61,7 +61,7 @@ const useLogin = (): UseLoginReturn => {
       });
       dadosLogin(dadosUser);
       router.replace("/(tabs)/Home");
-    } catch (erro: any) {
+    } catch (erro: unknown) {
       erros(erro);
     } finally {
       setLoading(false);
