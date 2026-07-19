@@ -1,92 +1,22 @@
-import { useApp } from "../../Contexts/UserApp";
-
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import {
-  Alert,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BoxLista from "../../Components/BoxLista/inde";
+import BtnAdd from "../../Components/BtnAdd";
+import HeaderTabs from "../../Components/HeaderTabs";
 import Inputs from "../../Components/Inputs";
 import ModalAdicionar from "../../Components/Modals/ModalAdicionar/ModalAdicionar";
-import { Addlista, obterLista } from "../../utils/requisicao";
+import TelaVazia from "../../Components/TelaVazia";
+import { useApp } from "../../Contexts/UserApp";
+import useHome from "../../hooks/useHome";
 
 const HomePage = () => {
-  const [atualizar, setAtualizar] = useState(0);
-  const [showModalADD, setShowModalAdd] = useState(false);
-  const router = useRouter();
-  const { user, listas, setListas } = useApp();
-  const status = "Não comprado";
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!user) return;
-
-      const buscarLista = async () => {
-        const { data: dataLista, error: errorLista } = await obterLista({
-          idUsuario: user.id,
-        });
-
-        if (errorLista) {
-          Alert.alert("Erro ao buscar lista", errorLista?.message);
-          return;
-        }
-
-        setListas(dataLista ?? []);
-      };
-
-      buscarLista();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [atualizar, user, setListas]),
-  );
-
-  if (!user) {
-    return router.replace("/");
-  }
-
-  const adicionarLista = async ({ name }: { name: string }) => {
-    try {
-      const { error } = await Addlista({
-        nome_Lista: name,
-        status_lista: status,
-        usuario_id: user.id,
-      });
-      if (error) {
-        Alert.alert("Erro ao cria lista ", error?.message);
-        return;
-      }
-
-      Alert.alert("Lista Criada com Sucesso");
-      setShowModalAdd(!showModalADD);
-      setAtualizar((prev) => prev + 1);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { adicionarLista, showModalADD, setShowModalAdd } = useHome();
+  const { user, listas } = useApp();
+  if (!user) return;
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View>
-          <Text style={styles.headerTexto1}>Minha Lista</Text>
-          <Text style={styles.headerTexto2}>
-            Bem vindo de volta, {user.nome.split(" ")[0]}
-          </Text>
-        </View>
-
-        <View>
-          <Image
-            style={styles.img}
-            source={require("../../assets/images/avatar.png")}
-          />
-        </View>
-      </View>
+      <HeaderTabs user={user} />
 
       <View style={{ alignItems: "center" }}>
         <Inputs placeholder="Procure sua lista" IconName="search" />
@@ -99,54 +29,14 @@ const HomePage = () => {
 
         <View style={{ width: "100%", height: "100%", paddingBottom: 120 }}>
           {!listas || listas.length === 0 ? (
-            <View style={{ marginTop: 20 }}>
-              <Text style={styles.listaVazia}>Sua lista está vazia.</Text>
-              <Text style={styles.listaVazia}>
-                Que tal adicionar sua primeira Lista?
-              </Text>
-            </View>
+            <TelaVazia
+              Texto1="Sua lista está vazia."
+              texto2="Que tal adicionar seu primeiro Item?"
+            />
           ) : (
             <ScrollView>
               {listas.map((lista) => (
-                <Pressable
-                  style={styles.boxLista}
-                  onPress={() =>
-                    router.push({
-                      pathname: "/Itens",
-                      params: {
-                        idLista: lista.id,
-                        nomeLista: lista.nome_Lista,
-                        dataCriacao: lista.created_at,
-                      },
-                    })
-                  }
-                  key={lista.id}
-                >
-                  <View style={{ flexDirection: "row", gap: 16 }}>
-                    <View style={styles.IconBoxLista}>
-                      <MaterialIcons
-                        name="shopping-cart"
-                        color={"#3B82F6"}
-                        size={24}
-                      />
-                    </View>
-                    <View>
-                      <Text style={styles.textBoxLista1}>
-                        {lista.nome_Lista}
-                      </Text>
-                      <Text style={styles.textBoxLista2}>
-                        {new Date(lista.created_at).toLocaleDateString("pt-br")}
-                      </Text>
-                    </View>
-                  </View>
-                  <View>
-                    <MaterialIcons
-                      name="keyboard-arrow-right"
-                      size={24}
-                      color={"#3B82F6"}
-                    />
-                  </View>
-                </Pressable>
+                <BoxLista key={lista.id} lista={lista} />
               ))}
             </ScrollView>
           )}
@@ -154,13 +44,12 @@ const HomePage = () => {
       </View>
 
       <View style={styles.btnAddPosition}>
-        <Pressable style={styles.btnAdd} onPress={() => setShowModalAdd(true)}>
-          <MaterialIcons name="add" color={"#FFFF"} size={36} />
-        </Pressable>
+        <BtnAdd onPress={() => setShowModalAdd(true)} />
+
         <ModalAdicionar
           visible={showModalADD}
           onCancel={() => setShowModalAdd(false)}
-          onCreate={(name) => adicionarLista({ name })}
+          onCreate={(name) => adicionarLista(name)}
         />
       </View>
     </SafeAreaView>
@@ -174,28 +63,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 
-  headerContainer: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-
-  headerTexto1: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#FFF",
-  },
-
-  headerTexto2: {
-    color: "#94A3B8",
-  },
-
-  img: {
-    width: 44,
-    height: 44,
-  },
-
   listaContainer: {
     marginTop: 16,
     justifyContent: "center",
@@ -207,71 +74,12 @@ const styles = StyleSheet.create({
     color: "#64748B",
   },
 
-  boxLista: {
-    width: "100%",
-    height: 72,
-    backgroundColor: "#FFFFFF10",
-    borderWidth: 1,
-    borderColor: "#FFFFFF15",
-    borderRadius: 16,
-    marginTop: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    padding: 16,
-  },
-
-  IconBoxLista: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#3B82F610",
-    borderWidth: 1,
-    borderColor: "#3B82F620",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  textBoxLista1: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#ffff",
-  },
-
-  textBoxLista2: {
-    fontSize: 11,
-    fontWeight: "medium",
-    color: "#94A3B8",
-  },
-
   btnAddPosition: {
     justifyContent: "flex-end",
     alignItems: "flex-end",
     position: "absolute",
     bottom: "5%",
     right: "5%",
-  },
-
-  btnAdd: {
-    backgroundColor: "#3B82F6",
-    width: 56,
-    height: 56,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5, // sombra no Android
-    shadowColor: "#3B82F6", // sombra no iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-
-  listaVazia: {
-    color: "#94A3B8",
-    fontSize: 16,
-    fontWeight: "semibold",
-
-    textAlign: "center",
   },
 });
 

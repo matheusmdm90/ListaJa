@@ -44,7 +44,7 @@ const Perfil = () => {
       </View>
 
       <View>
-        <Pressable style={styles.btnLogout} onPress={() => router.push("/")}>
+        <Pressable style={styles.btnLogout} onPress={() => router.replace("/")}>
           <MaterialIcons name="logout" size={24} color={"#FB7185"} />
           <Text style={styles.textLogout}> Sair da Conta</Text>
         </Pressable>
