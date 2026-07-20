@@ -14,7 +14,7 @@ type dadosListaType = {
   usuario_id: string;
   nome_Lista: string;
   atualização: string;
-  status_lista: string;
+  status_lista: number;
 };
 
 type dadosDoUsuariotype = {
@@ -25,7 +25,7 @@ type dadosDoUsuariotype = {
   email: string;
 };
 
-export const UserAppCtx = createContext<UserContextType | null>(null);
+const UserAppCtx = createContext<UserContextType | null>(null);
 
 export const UserAppProvider = ({
   children,

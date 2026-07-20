@@ -5,16 +5,18 @@ type User = {
 };
 
 type HeaderTabsProps = {
-  user: User;
+  user?: User;
+  texto1: string;
+  texto2?: string;
 };
 
-const HeaderTabs = ({ user }: HeaderTabsProps) => {
+const HeaderTabs = ({ user, texto1, texto2 }: HeaderTabsProps) => {
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.headerTexto1}>Minha Lista</Text>
+        <Text style={styles.headerTexto1}>{texto1}</Text>
         <Text style={styles.headerTexto2}>
-          Bem vindo de volta, {user.nome.split(" ")[0]}
+          {!user ? texto2 : `Bem vindo de volta, ${user.nome.split(" ")[0]}`}
         </Text>
       </View>
 

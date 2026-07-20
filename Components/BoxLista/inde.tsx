@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { ComponentProps } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Lista = {
@@ -8,11 +9,15 @@ type Lista = {
   created_at: string;
 };
 
+type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
+
 type typeBoxLista = {
   lista: Lista;
+  name: MaterialIconName;
+  color: string;
 };
 
-const BoxLista = ({ lista }: typeBoxLista) => {
+const BoxLista = ({ lista, name, color }: typeBoxLista) => {
   const router = useRouter();
   return (
     <Pressable
@@ -31,7 +36,7 @@ const BoxLista = ({ lista }: typeBoxLista) => {
     >
       <View style={{ flexDirection: "row", gap: 16 }}>
         <View style={styles.IconBoxLista}>
-          <MaterialIcons name="shopping-cart" color={"#3B82F6"} size={24} />
+          <MaterialIcons name={name} color={color} size={24} />
         </View>
         <View>
           <Text style={styles.textBoxLista1}>{lista.nome_Lista}</Text>
