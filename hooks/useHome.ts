@@ -5,10 +5,20 @@ import { useApp } from "../Contexts/UserApp";
 import erros from "../utils/errors";
 import { Addlista, obterLista } from "../utils/requisicao";
 
+type dadosListaType = {
+  id: string;
+  created_at: string;
+  usuario_id: string;
+  nome_Lista: string;
+  atualização: string;
+  status_lista: number;
+};
+
 type typeReturnUseHome = {
   adicionarLista: (name: string) => Promise<void>;
   showModalADD: boolean;
   setShowModalAdd: (value: boolean) => void;
+  listaNaoConcluida: dadosListaType[];
 };
 
 const useHome = (): typeReturnUseHome => {
@@ -17,6 +27,7 @@ const useHome = (): typeReturnUseHome => {
   const [showModalADD, setShowModalAdd] = useState(false);
   const { user, setListas } = useApp();
   const status = "Não comprado";
+  const { listas } = useApp();
 
   useEffect(() => {
     if (!user) {
@@ -68,10 +79,13 @@ const useHome = (): typeReturnUseHome => {
       console.log(err);
     }
   };
+
+  const listaNaoConcluida = listas.filter((lista) => lista.status_lista === 0);
   return {
     adicionarLista,
     showModalADD,
     setShowModalAdd,
+    listaNaoConcluida,
   };
 };
 

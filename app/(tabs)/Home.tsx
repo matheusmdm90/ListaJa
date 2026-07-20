@@ -10,13 +10,14 @@ import { useApp } from "../../Contexts/UserApp";
 import useHome from "../../hooks/useHome";
 
 const HomePage = () => {
-  const { adicionarLista, showModalADD, setShowModalAdd } = useHome();
-  const { user, listas } = useApp();
+  const { adicionarLista, showModalADD, setShowModalAdd, listaNaoConcluida } =
+    useHome();
+  const { user } = useApp();
   if (!user) return;
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderTabs user={user} />
+      <HeaderTabs user={user} texto1="Minha Lista" />
 
       <View style={{ alignItems: "center" }}>
         <Inputs placeholder="Procure sua lista" IconName="search" />
@@ -28,15 +29,20 @@ const HomePage = () => {
         </View>
 
         <View style={{ width: "100%", height: "100%", paddingBottom: 120 }}>
-          {!listas || listas.length === 0 ? (
+          {!listaNaoConcluida || listaNaoConcluida.length === 0 ? (
             <TelaVazia
               Texto1="Sua lista está vazia."
               texto2="Que tal adicionar seu primeiro Item?"
             />
           ) : (
             <ScrollView>
-              {listas.map((lista) => (
-                <BoxLista key={lista.id} lista={lista} />
+              {listaNaoConcluida.map((lista) => (
+                <BoxLista
+                  key={lista.id}
+                  lista={lista}
+                  color="#3B82F6"
+                  name="shopping-cart"
+                />
               ))}
             </ScrollView>
           )}
