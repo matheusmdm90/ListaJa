@@ -42,6 +42,9 @@ type useItemretunr = {
   dataCriacao: string;
   totalGeral: number;
   pronto: boolean;
+  finalizando: boolean;
+  showModalExcluirLista: boolean;
+  setShowModalExcluirLista: (value: boolean) => void;
   verificarListaConcluida: () => Promise<void>;
 };
 
@@ -49,8 +52,10 @@ const useItens = (): useItemretunr => {
   const router = useRouter();
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [pronto, setPronto] = useState(false);
+  const [finalizando, setFinalizando] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState<string | null>(null);
   const [showModalExcluir, setShowModalExcluit] = useState<string | null>(null);
+  const [showModalExcluirLista, setShowModalExcluirLista] = useState(false);
   const [atualizar, setAtualizar] = useState(0);
   const [itens, setItens] = useState<dadosItensType[]>([]);
   const { idLista, nomeLista, dataCriacao } = useLocalSearchParams<{
@@ -68,7 +73,7 @@ const useItens = (): useItemretunr => {
           const buscarIntens = async () => {
             const { data: dataItens, error: errorDataItens } =
               await obterItensLista({
-              idDaLista: idLista,
+                idDaLista: idLista,
               });
             if (errorDataItens) {
               throw errorDataItens;
@@ -109,7 +114,7 @@ const useItens = (): useItemretunr => {
     const { error: errorAddItem } = await adicionarItem({
       lista_id: idLista,
       nome_item: name,
-      status_item: "Item não compardo",
+      status_item: "Item não comprando",
     });
     if (errorAddItem) {
       throw errorAddItem;
@@ -169,7 +174,7 @@ const useItens = (): useItemretunr => {
       if (erroDeletarLista) {
         throw erroDeletarLista;
       }
-      console.log("Lista excluida com sucesso");
+
       router.back();
     } catch (erro) {
       erros(erro);
@@ -191,6 +196,7 @@ const useItens = (): useItemretunr => {
       return;
     } else if (itens.every((iten) => iten.order_status === 1)) {
       try {
+        setFinalizando(true);
         const { error } = await UpdateListaConcluida({
           id_lista: idLista,
           status_lista: 1,
@@ -202,6 +208,8 @@ const useItens = (): useItemretunr => {
         router.push("/Home");
       } catch (erro) {
         erros(erro);
+      } finally {
+        setFinalizando(false);
       }
     } else {
       avisoCampoInvalido("1 ou mais itens não foram comprados ");
@@ -225,6 +233,9 @@ const useItens = (): useItemretunr => {
     nomeLista,
     totalGeral,
     pronto,
+    finalizando,
+    showModalExcluirLista,
+    setShowModalExcluirLista,
     verificarListaConcluida,
   };
 };

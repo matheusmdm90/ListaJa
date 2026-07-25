@@ -6,12 +6,14 @@ type TyprheaderTelaItem = {
   nomeLista: string;
   dataCriacao: string;
   deletarLista: () => void;
+  onDeletePress?: () => void;
 };
 
 const HeaderTelaItem = ({
   nomeLista,
   dataCriacao,
   deletarLista,
+  onDeletePress,
 }: TyprheaderTelaItem) => {
   return (
     <View style={styles.header}>
@@ -30,7 +32,7 @@ const HeaderTelaItem = ({
       </View>
 
       <View>
-        <Pressable onPress={deletarLista}>
+        <Pressable onPress={onDeletePress ?? deletarLista}>
           <MaterialIcons name="delete" size={24} color={"#64748B"} />
         </Pressable>
       </View>

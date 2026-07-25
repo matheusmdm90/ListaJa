@@ -5,6 +5,7 @@ import BtnAdd from "../Components/BtnAdd";
 import HeaderTelaItem from "../Components/HeaderTelaItem";
 import ModalAdicionar from "../Components/Modals/ModalAdicionar/ModalAdicionar";
 import ModalExcluir from "../Components/Modals/ModalExcluir/ModalExcluir";
+import ModalExcluirLista from "../Components/Modals/ModalExcluirLista/ModalExcluirLista";
 import ModalItens from "../Components/Modals/ModalItens/ModalItens";
 import TelaVazia from "../Components/TelaVazia";
 import VisorTotal from "../Components/VisorTotal";
@@ -28,6 +29,9 @@ const Itens = () => {
     nomeLista,
     totalGeral,
     pronto,
+    finalizando,
+    showModalExcluirLista,
+    setShowModalExcluirLista,
     verificarListaConcluida,
   } = useItens();
 
@@ -37,6 +41,7 @@ const Itens = () => {
         dataCriacao={dataCriacao}
         nomeLista={nomeLista}
         deletarLista={deletarLista}
+        onDeletePress={() => setShowModalExcluirLista(true)}
       />
 
       <View style={{ width: "100%", height: "85%" }}>
@@ -104,6 +109,16 @@ const Itens = () => {
           );
         })()}
 
+      {/* modal excluir lista  */}
+      {showModalExcluirLista && (
+        <ModalExcluirLista
+          visible={!!showModalExcluirLista}
+          onCancel={() => setShowModalExcluirLista(false)}
+          onConfirm={deletarLista}
+          nomeLista={nomeLista}
+        />
+      )}
+
       {/* modal adicionar item  */}
       <ModalAdicionar
         visible={showModalAdd}
@@ -116,7 +131,7 @@ const Itens = () => {
       />
 
       <View style={styles.btnAddPosition}>
-        <VisorTotal totalGeral={totalGeral} onPress={verificarListaConcluida} ready={pronto} />
+        <VisorTotal totalGeral={totalGeral} onPress={verificarListaConcluida} ready={pronto} loading={finalizando} />
         <BtnAdd onPress={() => setShowModalAdd(true)} />
       </View>
     </SafeAreaView>

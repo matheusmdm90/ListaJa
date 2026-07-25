@@ -1,15 +1,19 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { formatarValor } from "../../utils/fortmatacao";
 
 const VisorTotal = ({
   totalGeral,
   onPress,
   ready = true,
+  loading = false,
 }: {
   totalGeral: number;
   onPress: () => void;
   ready?: boolean;
+  loading?: boolean;
 }) => {
+  const disabled = !ready || loading;
+
   return (
     <View style={styles.abaTotal}>
       <View>
@@ -17,13 +21,21 @@ const VisorTotal = ({
         <Text style={styles.abaTotalText2}>R$ {formatarValor(totalGeral)}</Text>
       </View>
       <Pressable
-        style={[styles.abaTotalBtn, !ready && styles.abaTotalBtnDisabled]}
-        disabled={!ready}
+        style={[
+          styles.abaTotalBtn,
+          !ready && styles.abaTotalBtnDisabled,
+          loading && styles.abaTotalBtnDisabled,
+        ]}
+        disabled={disabled}
         onPress={onPress}
       >
-        <Text style={styles.abaTotalBtnTexto}>
-          {ready ? "Finalizar" : "Carregando..."}
-        </Text>
+        {loading ? (
+          <ActivityIndicator color="#F1F5F9" />
+        ) : (
+          <Text style={styles.abaTotalBtnTexto}>
+            {ready ? "Finalizar" : "Carregando..."}
+          </Text>
+        )}
       </Pressable>
     </View>
   );
