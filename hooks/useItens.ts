@@ -1,5 +1,6 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
+import { avisoCampoInvalido, toastsucesso } from "../Components/Toast/toast";
 import { ITENS_SUPERMERCADO } from "../data/dataItem";
 import erros from "../utils/errors";
 import {
@@ -8,6 +9,7 @@ import {
   excluirLista,
   obterItensLista,
   UpdateItem,
+  UpdateListaConcluida,
 } from "../utils/requisicao";
 type dadosItensType = {
   id: string;
@@ -39,11 +41,14 @@ type useItemretunr = {
   nomeLista: string;
   dataCriacao: string;
   totalGeral: number;
+  pronto: boolean;
+  verificarListaConcluida: () => Promise<void>;
 };
 
 const useItens = (): useItemretunr => {
   const router = useRouter();
   const [showModalAdd, setShowModalAdd] = useState(false);
+  const [pronto, setPronto] = useState(false);
   const [itemSelecionado, setItemSelecionado] = useState<string | null>(null);
   const [showModalExcluir, setShowModalExcluit] = useState<string | null>(null);
   const [atualizar, setAtualizar] = useState(0);
@@ -58,22 +63,31 @@ const useItens = (): useItemretunr => {
   useFocusEffect(
     useCallback(
       () => {
+        let isActive = true;
         try {
           const buscarIntens = async () => {
             const { data: dataItens, error: errorDataItens } =
               await obterItensLista({
-                idDaLista: idLista,
+              idDaLista: idLista,
               });
             if (errorDataItens) {
               throw errorDataItens;
             }
 
-            setItens(dataItens ?? []);
+            if (isActive) {
+              setItens(dataItens ?? []);
+              setPronto(true);
+            }
           };
           buscarIntens();
         } catch (erro) {
           erros(erro);
+          setPronto(true);
         }
+
+        return () => {
+          isActive = false;
+        };
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [atualizar, idLista, setItens],
@@ -168,6 +182,32 @@ const useItens = (): useItemretunr => {
       return total + subtotal;
     }, 0) ?? 0;
 
+  const verificarListaConcluida = async () => {
+    if (!pronto) {
+      return;
+    }
+
+    if (!itens) {
+      return;
+    } else if (itens.every((iten) => iten.order_status === 1)) {
+      try {
+        const { error } = await UpdateListaConcluida({
+          id_lista: idLista,
+          status_lista: 1,
+        });
+        if (error) {
+          throw error;
+        }
+        toastsucesso("Lista concluida!!");
+        router.push("/Home");
+      } catch (erro) {
+        erros(erro);
+      }
+    } else {
+      avisoCampoInvalido("1 ou mais itens não foram comprados ");
+    }
+  };
+
   return {
     deletarLista,
     excluirITemLista,
@@ -184,6 +224,8 @@ const useItens = (): useItemretunr => {
     setItemSelecionado,
     nomeLista,
     totalGeral,
+    pronto,
+    verificarListaConcluida,
   };
 };
 

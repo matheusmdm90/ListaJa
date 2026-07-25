@@ -1,16 +1,30 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { formatarValor } from "../../utils/fortmatacao";
 
-const VisorTotal = ({ totalGeral }: { totalGeral: number }) => {
+const VisorTotal = ({
+  totalGeral,
+  onPress,
+  ready = true,
+}: {
+  totalGeral: number;
+  onPress: () => void;
+  ready?: boolean;
+}) => {
   return (
     <View style={styles.abaTotal}>
       <View>
         <Text style={styles.abaTotalText1}> Total Estimado </Text>
         <Text style={styles.abaTotalText2}>R$ {formatarValor(totalGeral)}</Text>
       </View>
-      <View style={styles.abaTotalBtn}>
-        <Text style={styles.abaTotalBtnTexto}>Finalizar</Text>
-      </View>
+      <Pressable
+        style={[styles.abaTotalBtn, !ready && styles.abaTotalBtnDisabled]}
+        disabled={!ready}
+        onPress={onPress}
+      >
+        <Text style={styles.abaTotalBtnTexto}>
+          {ready ? "Finalizar" : "Carregando..."}
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -54,6 +68,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#F1F5F9",
+  },
+  abaTotalBtnDisabled: {
+    backgroundColor: "#FFFFFF10",
   },
 });
 
