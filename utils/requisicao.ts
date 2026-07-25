@@ -163,3 +163,19 @@ export const excluirLista = async ({ idLista }: { idLista: string }) => {
 
   return { data, error };
 };
+
+export const UpdateListaConcluida = async ({
+  status_lista,
+  id_lista,
+}: {
+  status_lista: number;
+  id_lista: string;
+}) => {
+  let { data, error } = await supabase
+    .from("lista")
+    .update({ status_lista })
+    .eq("id", id_lista)
+    .select();
+
+  return { data, error };
+};
