@@ -20,7 +20,7 @@ const HomePage = () => {
       <HeaderTabs user={user} texto1="Minha Lista" />
 
       <View style={{ alignItems: "center" }}>
-        <Inputs placeholder="Procure sua lista" IconName="search" />
+        <Inputs placeholder="Procure sua lista" iconName="search" />
       </View>
 
       <View style={styles.listaContainer}>

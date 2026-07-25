@@ -52,7 +52,7 @@ const Cadastro = () => {
               <Inputs
                 nomeInput="Nome Completo"
                 placeholder="Digite seu nome Completo"
-                IconName="person"
+                iconName="person"
                 value={nome}
                 onChangeText={setNome}
               />
@@ -60,14 +60,14 @@ const Cadastro = () => {
               <Inputs
                 nomeInput="E-mail"
                 placeholder="digite teu email"
-                IconName="email"
+                iconName="email"
                 value={email}
                 onChangeText={(texto) => setEmail(texto.toLowerCase())}
               />
               <Inputs
                 nomeInput="Confirme seu E-Mail"
                 placeholder="Confirme seu E-Mail"
-                IconName="mark-email-read"
+                iconName="mark-email-read"
                 value={confirmeEmail}
                 onChangeText={(texto) => setConfirmeEmail(texto.toLowerCase())}
               />
@@ -75,14 +75,14 @@ const Cadastro = () => {
               <Inputs
                 nomeInput="Senha"
                 placeholder="*******"
-                IconName="lock"
+                iconName="lock"
                 value={senha}
                 onChangeText={setSenha}
               />
               <Inputs
                 nomeInput="Confirme sua senha"
                 placeholder="*******"
-                IconName="lock-reset"
+                iconName="lock-reset"
                 value={confirmeSenha}
                 onChangeText={setConfirmeSenha}
               />

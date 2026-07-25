@@ -12,7 +12,7 @@ import {
 interface inputsPropsType {
   nomeInput?: string;
   placeholder: string;
-  IconName?: string;
+  iconName?: string;
   value?: string;
   keyboardType?: KeyboardTypeOptions;
   onChangeText?: (text: string) => void;
@@ -20,12 +20,13 @@ interface inputsPropsType {
 
 const Inputs = ({
   placeholder,
-  IconName,
+  iconName,
   nomeInput,
   value,
   keyboardType,
   onChangeText,
 }: inputsPropsType) => {
+  const Icon = iconName ? <MaterialIcons name={iconName as any} size={20} color={"#FFFFFF30"} /> : null;
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const PASSWORD_FIELD_NAMES = [
@@ -44,9 +45,7 @@ const Inputs = ({
       <Text style={styles.inputText}>{nomeInput}</Text>
 
       <View style={styles.boxInput}>
-        {IconName && (
-          <MaterialIcons name={IconName} size={20} color={"#FFFFFF30"} />
-        )}
+        {Icon}
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={"#FFFFFF30"}

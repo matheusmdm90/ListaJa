@@ -27,7 +27,7 @@ export default function Index() {
             <View style={styles.inputContainer}>
               <Inputs
                 placeholder="exemplo@email.com"
-                IconName="alternate-email"
+                iconName="alternate-email"
                 onChangeText={setEmail}
                 value={email}
                 nomeInput="E-MAIL"
@@ -37,7 +37,7 @@ export default function Index() {
               <Inputs
                 nomeInput="SENHA"
                 placeholder="••••••••"
-                IconName="lock"
+                iconName="lock"
                 value={senha}
                 onChangeText={setSenha}
               />

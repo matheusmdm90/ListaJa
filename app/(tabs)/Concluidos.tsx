@@ -16,7 +16,7 @@ const Concluidos = () => {
       <HeaderTabs texto1="Concluido" texto2="Historico de compras" />
 
       <View style={{ alignItems: "center" }}>
-        <Inputs placeholder="Procure sua lista" IconName="search" />
+        <Inputs placeholder="Procure sua lista" iconName="search" />
       </View>
 
       <View style={styles.textoHistoricos}>
