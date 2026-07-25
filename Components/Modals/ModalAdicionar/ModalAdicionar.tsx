@@ -15,22 +15,17 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "../../Toast/toastConfig";
+import { toastConfig } from "../../../Components/Toast/toastConfig";
 
 type Props = {
   visible: boolean;
   onCreate: (name: string) => Promise<void>;
   onCancel: () => void;
   titulo?: string;
-  // valor você vai dizer oque quer cria
   valor?: string;
-  // e o placeholder do input oque vc quer colocar nele
   placeholder?: string;
   sugestoes?: string[];
 };
-
-// const { width } = Dimensions.get("window");
-// const CARD_WIDTH = Math.min(520, width - 40);
 
 const ModalAdicionar = ({
   visible,
@@ -43,110 +38,117 @@ const ModalAdicionar = ({
 }: Props) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [sugestoesVisiveis, setSugestoesVisiveis] = useState<string[]>([]);
+
+  const titleText = titulo ?? "Nova Lista";
+  const placeholderText = placeholder ?? "Ex: Churrasco, Mercado, Roupa";
+  const createLabel = valor ?? "Lista";
+
+  const resetModalState = () => {
+    setName("");
+    setSugestoesVisiveis([]);
+  };
 
   const handleChangeText = (text: string) => {
     setName(text);
-    if (sugestoes && text.length > 0) {
-      // 👈 só filtra se vier sugestoes
-      const filtrados = sugestoes
-        .filter((item) => item.toLowerCase().startsWith(text.toLowerCase()))
-        .slice(0, 5);
-      setSugestoesVisiveis(filtrados);
-    } else {
+
+    if (!sugestoes?.length || text.length === 0) {
       setSugestoesVisiveis([]);
+      return;
     }
+
+    const filtrados = sugestoes
+      .filter((item) => item.toLowerCase().startsWith(text.toLowerCase()))
+      .slice(0, 5);
+
+    setSugestoesVisiveis(filtrados);
+  };
+
+  const handleSuggestionPress = (item: string) => {
+    setName(item);
+    setSugestoesVisiveis([]);
+  };
+
+  const handleClose = () => {
+    resetModalState();
+    onCancel();
   };
 
   const handleCreate = async () => {
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
       alert("Por favor, digite um nome");
       return;
     }
 
     setLoading(true);
+
     try {
-      await onCreate(name.trim());
-      setName("");
-      setSugestoesVisiveis([]);
+      await onCreate(trimmedName);
+      resetModalState();
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Modal
-        visible={visible}
-        transparent={false}
-        animationType="fade"
-        onRequestClose={onCancel}
-        backdropColor={"#1A1F2E50"}
+    <Modal
+      visible={visible}
+      transparent={false}
+      animationType="fade"
+      onRequestClose={handleClose}
+      backdropColor={"#1A1F2E50"}
+    >
+      <Toast config={toastConfig} />
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
+        style={styles.flex}
       >
-        <Toast config={toastConfig} />
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "padding"}
-          style={{ flex: 1 }}
-        >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.backdrop}>
-              <View style={styles.container}>
-                <View
-                  style={{
-                    width: "100%",
-                    alignItems: "flex-end",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <Pressable onPress={onCancel}>
-                    <MaterialCommunityIcons
-                      name="close"
-                      size={24}
-                      color="#bfc7d6"
-                    />
-                  </Pressable>
-                </View>
-
-                <Text style={styles.title}>
-                  {titulo ? titulo : "Nova Lista"}
-                </Text>
-                <Text style={styles.subtitle}>
-                  Defina um nome para começar a organizar.
-                </Text>
-
-                <Text style={styles.label}>NOME</Text>
-                <View style={{ position: "relative" }}>
-                  <TextInput
-                    value={name}
-                    onChangeText={handleChangeText}
-                    placeholder={
-                      placeholder
-                        ? placeholder
-                        : "Ex: Churrasco, Mercado, Roupa"
-                    }
-                    placeholderTextColor="#6b7380"
-                    style={styles.input}
-                    returnKeyType="done"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.backdrop}>
+            <View style={styles.container}>
+              <View style={styles.header}>
+                <Pressable onPress={handleClose} hitSlop={8}>
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={24}
+                    color="#bfc7d6"
                   />
+                </Pressable>
+              </View>
 
-                  {/* 👇 lista de sugestões */}
-                  {sugestoesVisiveis.length > 0 && (
-                    <View style={styles.sugestoes}>
-                      {sugestoesVisiveis.map((item, index) => (
+              <Text style={styles.title}>{titleText}</Text>
+              <Text style={styles.subtitle}>
+                Defina um nome para começar a organizar.
+              </Text>
+
+              <Text style={styles.label}>NOME</Text>
+
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  value={name}
+                  onChangeText={handleChangeText}
+                  placeholder={placeholderText}
+                  placeholderTextColor="#6b7380"
+                  style={styles.input}
+                  returnKeyType="done"
+                />
+
+                {sugestoesVisiveis.length > 0 && (
+                  <View style={styles.sugestoes}>
+                    {sugestoesVisiveis.map((item, index) => {
+                      const isLastItem = index === sugestoesVisiveis.length - 1;
+
+                      return (
                         <Pressable
                           key={item}
                           style={[
                             styles.sugestaoItem,
-                            index < sugestoesVisiveis.length - 1 && {
-                              borderBottomWidth: 1,
-                              borderBottomColor: "rgba(255,255,255,0.05)",
-                            },
+                            !isLastItem && styles.sugestaoItemBorder,
                           ]}
-                          onPress={() => {
-                            setName(item);
-                            setSugestoesVisiveis([]);
-                          }}
+                          onPress={() => handleSuggestionPress(item)}
                         >
                           <MaterialCommunityIcons
                             name="magnify"
@@ -155,66 +157,75 @@ const ModalAdicionar = ({
                           />
                           <Text style={styles.sugestaoTexto}>{item}</Text>
                         </Pressable>
-                      ))}
-                    </View>
-                  )}
-                </View>
-
-                <View style={{ height: 12 }} />
-
-                <TouchableOpacity
-                  style={[styles.createButton, loading && { opacity: 0.6 }]}
-                  activeOpacity={0.85}
-                  onPress={handleCreate}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <View style={styles.createContent}>
-                      <View style={styles.plusCircle}>
-                        <MaterialCommunityIcons
-                          name="plus"
-                          size={24}
-                          color="#ffff"
-                        />
-                      </View>
-                      <Text style={styles.createText}>
-                        Criar {valor ? valor : "Lista"}
-                      </Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                )}
               </View>
+
+              <View style={styles.spacer} />
+
+              <TouchableOpacity
+                style={[
+                  styles.createButton,
+                  loading && styles.createButtonLoading,
+                ]}
+                activeOpacity={0.85}
+                onPress={handleCreate}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <View style={styles.createContent}>
+                    <View style={styles.plusCircle}>
+                      <MaterialCommunityIcons
+                        name="plus"
+                        size={24}
+                        color="#ffff"
+                      />
+                    </View>
+                    <Text style={styles.createText}>Criar {createLabel}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
             </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-      </Modal>
-    </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   backdrop: {
     flex: 1,
     justifyContent: "center",
     width: "100%",
     height: "100%",
+    paddingHorizontal: 24,
   },
   container: {
-    width: 360,
+    width: "100%",
+    maxWidth: 360,
     alignSelf: "center",
     backgroundColor: "#1e2733",
     borderRadius: 22,
     paddingVertical: 26,
     paddingHorizontal: 22,
-
     shadowColor: "#000",
     shadowOpacity: 0.7,
     shadowRadius: 20,
     elevation: 12,
   },
-
+  header: {
+    width: "100%",
+    alignItems: "flex-end",
+    justifyContent: "flex-start",
+  },
   title: {
     fontSize: 28,
     fontWeight: "800",
@@ -232,6 +243,9 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 6,
   },
+  inputWrapper: {
+    position: "relative",
+  },
   input: {
     backgroundColor: "rgba(255,255,255,0.02)",
     borderRadius: 14,
@@ -241,6 +255,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.02)",
+  },
+  spacer: {
+    height: 12,
   },
   createButton: {
     marginTop: 18,
@@ -254,6 +271,9 @@ const styles = StyleSheet.create({
     shadowOpacity: Platform.OS === "ios" ? 0.35 : 0.18,
     shadowRadius: 18,
     elevation: 10,
+  },
+  createButtonLoading: {
+    opacity: 0.6,
   },
   createContent: {
     flexDirection: "row",
@@ -273,10 +293,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
   },
-
   sugestoes: {
-    position: "absolute", // flutua
-    top: "100%", // cola abaixo do input
+    position: "absolute",
+    top: "100%",
     left: 0,
     right: 0,
     marginTop: 6,
@@ -297,6 +316,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     padding: 12,
+  },
+  sugestaoItemBorder: {
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255,255,255,0.05)",
   },

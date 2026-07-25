@@ -74,7 +74,7 @@ export const Addlista = async ({
 }: {
   usuario_id: string;
   nome_Lista: string;
-  status_lista: string;
+  status_lista: number;
 }) => {
   let { data, error } = await supabase
     .from("lista")

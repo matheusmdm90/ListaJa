@@ -26,7 +26,7 @@ const useHome = (): typeReturnUseHome => {
   const [atualizar, setAtualizar] = useState(0);
   const [showModalADD, setShowModalAdd] = useState(false);
   const { user, setListas } = useApp();
-  const status = "Não comprado";
+
   const { listas } = useApp();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const useHome = (): typeReturnUseHome => {
     try {
       const { error } = await Addlista({
         nome_Lista: name,
-        status_lista: status,
+        status_lista: 0,
         usuario_id: user.id,
       });
       if (error) {
