@@ -1,11 +1,19 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
-import { useApp } from "../../Contexts/UserApp";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const TabsLayout = () => {
-  const { user } = useApp();
+  const { user: authUser, loading } = useAuth();
 
-  if (!user) {
+  /**
+   * Redireciona para login se não houver usuário autenticado.
+   * Usa o loading do Auth para evitar flicker na abertura do app.
+   */
+  if (loading) {
+    return null;
+  }
+
+  if (!authUser) {
     return <Redirect href="/" />;
   }
 

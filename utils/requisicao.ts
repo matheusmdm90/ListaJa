@@ -134,7 +134,7 @@ export const UpdateItem = async ({
   quantidade: number;
   valor_item: number;
   idItem: string;
-  status_item: string;
+  status_item: number;
   order_status: number;
 }) => {
   let { data, error } = await supabase

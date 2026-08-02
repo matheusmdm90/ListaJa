@@ -5,10 +5,18 @@ import PerfilOption from "../../Components/BoxPerfil";
 import LogoutButton from "../../Components/LogoutButton";
 import PerfilHeader from "../../Components/PerfilHeader";
 import { useApp } from "../../Contexts/UserApp";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const Perfil = () => {
   const router = useRouter();
+  const { signOut } = useAuth();
   const { user } = useApp();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.replace("/");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <PerfilHeader name={user?.nome} email={user?.email} />
@@ -21,7 +29,7 @@ const Perfil = () => {
         />
       </View>
 
-      <LogoutButton onPress={() => router.replace("/")} />
+      <LogoutButton onPress={handleLogout} />
     </SafeAreaView>
   );
 };

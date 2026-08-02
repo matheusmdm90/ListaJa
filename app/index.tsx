@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,10 +12,16 @@ import Botao from "../Components/Botao";
 import Inputs from "../Components/Inputs";
 import Logo from "../Components/Logo";
 import useLogin from "../hooks/useLogin";
+import { useAuth } from "../Contexts/AuthContext";
 
 export default function Index() {
   const router = useRouter();
   const { email, setEmail, loading, senha, setSenha, login } = useLogin();
+  const { user, loading: authLoading } = useAuth();
+
+  if (!authLoading && user) {
+    return <Redirect href="/(tabs)/Home" />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#101422" }}>

@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { useApp } from "../Contexts/UserApp";
@@ -15,7 +14,6 @@ interface UseLoginReturn {
 }
 
 const useLogin = (): UseLoginReturn => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,7 +42,6 @@ const useLogin = (): UseLoginReturn => {
       }
 
       const id = data.user?.id;
-
       const { data: dadosUser, error: errorDadosUser } = await obterUsuario({
         id_usuario: id,
       });
@@ -59,8 +56,8 @@ const useLogin = (): UseLoginReturn => {
         position: "top", // 'top' ou 'bottom'
         visibilityTime: 3000, // 3 segundos
       });
+
       dadosLogin(dadosUser);
-      router.replace("/(tabs)/Home");
     } catch (erro: unknown) {
       erros(erro);
     } finally {

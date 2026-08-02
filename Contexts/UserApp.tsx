@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
+import { obterUsuario } from "../utils/requisicao";
 
 type UserContextType = {
   user: dadosDoUsuariotype | null;
@@ -34,6 +36,36 @@ export const UserAppProvider = ({
 }) => {
   const [user, setUser] = useState<dadosDoUsuariotype | null>(null);
   const [listas, setListas] = useState<dadosListaType[]>([]);
+  const { user: authUser } = useAuth();
+
+  useEffect(() => {
+    let isActive = true;
+
+    const carregarPerfil = async () => {
+      if (!authUser) {
+        setUser(null);
+        return;
+      }
+
+      try {
+        const { data, error } = await obterUsuario({
+          id_usuario: authUser.id,
+        });
+
+        if (isActive && !error && data) {
+          setUser(data);
+        }
+      } catch (erro) {
+        console.log("Erro ao carregar perfil do usuário:", erro);
+      }
+    };
+
+    carregarPerfil();
+
+    return () => {
+      isActive = false;
+    };
+  }, [authUser]);
 
   const dadosLogin = (userData: dadosDoUsuariotype | null) => {
     setUser(userData);

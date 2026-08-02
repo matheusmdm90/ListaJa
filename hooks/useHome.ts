@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { toastsucesso } from "../Components/Toast/toast";
+import { useAuth } from "../Contexts/AuthContext";
 import { useApp } from "../Contexts/UserApp";
 import erros from "../utils/errors";
 import { Addlista, obterLista } from "../utils/requisicao";
@@ -26,14 +27,15 @@ const useHome = (): typeReturnUseHome => {
   const [atualizar, setAtualizar] = useState(0);
   const [showModalADD, setShowModalAdd] = useState(false);
   const { user, setListas } = useApp();
+  const { user: authUser, loading: authLoading } = useAuth();
 
   const { listas } = useApp();
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !authUser) {
       router.replace("/");
     }
-  }, [user, router]);
+  }, [authLoading, authUser, router]);
 
   useFocusEffect(
     useCallback(() => {
@@ -76,7 +78,7 @@ const useHome = (): typeReturnUseHome => {
       setShowModalAdd(!showModalADD);
       setAtualizar((prev) => prev + 1);
     } catch (err) {
-      console.log(err);
+      console.log(err, "coe");
     }
   };
 

@@ -137,7 +137,7 @@ const useItens = (): useItemretunr => {
         idItem: idItem,
         quantidade: quantidade,
         valor_item: valor,
-        status_item: "Item comprado",
+        status_item: 1,
         order_status: 1,
       });
       if (errorAoAtualizar) {
