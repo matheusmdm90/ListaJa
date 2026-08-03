@@ -18,7 +18,7 @@ export default function RootLayout() {
             <Stack.Screen name="Itens" options={{ headerShown: false }} />
           </Stack>
           <StatusBar />
-          <Toast config={toastConfig} topOffset={0} />
+          <Toast config={toastConfig} />
         </SafeAreaProvider>
       </UserAppProvider>
     </AuthProvider>
