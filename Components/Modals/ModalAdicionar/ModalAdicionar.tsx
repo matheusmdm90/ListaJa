@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../Components/Toast/toastConfig";
+import { avisoCampoInvalido } from "../../Toast/toast";
 
 type Props = {
   visible: boolean;
@@ -78,7 +79,7 @@ const ModalAdicionar = ({
     const trimmedName = name.trim();
 
     if (!trimmedName) {
-      alert("Por favor, digite um nome");
+      avisoCampoInvalido("Digite um Nome");
       return;
     }
 
@@ -100,7 +101,7 @@ const ModalAdicionar = ({
       onRequestClose={handleClose}
       backdropColor={"#1A1F2E50"}
     >
-      <Toast config={toastConfig} />
+      <Toast config={toastConfig} topOffset={0} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "padding"}
