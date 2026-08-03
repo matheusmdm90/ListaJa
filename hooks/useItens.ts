@@ -46,6 +46,7 @@ type useItemretunr = {
   showModalExcluirLista: boolean;
   setShowModalExcluirLista: (value: boolean) => void;
   verificarListaConcluida: () => Promise<void>;
+  listaConcluida: boolean;
 };
 
 const useItens = (): useItemretunr => {
@@ -58,12 +59,15 @@ const useItens = (): useItemretunr => {
   const [showModalExcluirLista, setShowModalExcluirLista] = useState(false);
   const [atualizar, setAtualizar] = useState(0);
   const [itens, setItens] = useState<dadosItensType[]>([]);
-  const { idLista, nomeLista, dataCriacao } = useLocalSearchParams<{
-    idLista: string;
-    nomeLista: string;
-    dataCriacao: string;
-  }>();
+  const { idLista, nomeLista, dataCriacao, statusListas } =
+    useLocalSearchParams<{
+      idLista: string;
+      nomeLista: string;
+      dataCriacao: string;
+      statusListas: string;
+    }>();
   const [listaSurgestao, setlistaSurgestao] = useState<string[]>([]);
+  const [listaConcluida, setListaConcluida] = useState(false);
 
   useFocusEffect(
     useCallback(
@@ -88,6 +92,9 @@ const useItens = (): useItemretunr => {
         } catch (erro) {
           erros(erro);
           setPronto(true);
+        }
+        if (statusListas === "1") {
+          setListaConcluida(true);
         }
 
         return () => {
@@ -191,6 +198,10 @@ const useItens = (): useItemretunr => {
     if (!pronto) {
       return;
     }
+    if (itens.length === 0) {
+      avisoCampoInvalido("Lista vazia");
+      return;
+    }
 
     if (!itens) {
       return;
@@ -237,6 +248,7 @@ const useItens = (): useItemretunr => {
     showModalExcluirLista,
     setShowModalExcluirLista,
     verificarListaConcluida,
+    listaConcluida,
   };
 };
 

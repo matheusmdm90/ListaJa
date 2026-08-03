@@ -7,6 +7,7 @@ type Lista = {
   id: string;
   nome_Lista: string;
   created_at: string;
+  status_lista: number;
 };
 
 type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
@@ -29,6 +30,7 @@ const BoxLista = ({ lista, name, color }: typeBoxLista) => {
             idLista: lista.id,
             nomeLista: lista.nome_Lista,
             dataCriacao: lista.created_at,
+            statusListas: lista.status_lista,
           },
         })
       }
