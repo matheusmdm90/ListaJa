@@ -1,4 +1,10 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { formatarValor } from "../../utils/fortmatacao";
 
 const VisorTotal = ({
@@ -6,13 +12,15 @@ const VisorTotal = ({
   onPress,
   ready = true,
   loading = false,
+  listaConcluida = true,
 }: {
   totalGeral: number;
   onPress: () => void;
   ready?: boolean;
   loading?: boolean;
+  listaConcluida?: boolean;
 }) => {
-  const disabled = !ready || loading;
+  const disabled = !ready || loading || listaConcluida;
 
   return (
     <View style={styles.abaTotal}>
@@ -25,6 +33,7 @@ const VisorTotal = ({
           styles.abaTotalBtn,
           !ready && styles.abaTotalBtnDisabled,
           loading && styles.abaTotalBtnDisabled,
+          listaConcluida && styles.listaconcluida,
         ]}
         disabled={disabled}
         onPress={onPress}
@@ -83,6 +92,9 @@ const styles = StyleSheet.create({
   },
   abaTotalBtnDisabled: {
     backgroundColor: "#FFFFFF10",
+  },
+  listaconcluida: {
+    display: "none",
   },
 });
 

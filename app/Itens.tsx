@@ -33,6 +33,7 @@ const Itens = () => {
     showModalExcluirLista,
     setShowModalExcluirLista,
     verificarListaConcluida,
+    listaConcluida,
   } = useItens();
 
   return (
@@ -131,7 +132,13 @@ const Itens = () => {
       />
 
       <View style={styles.btnAddPosition}>
-        <VisorTotal totalGeral={totalGeral} onPress={verificarListaConcluida} ready={pronto} loading={finalizando} />
+        <VisorTotal
+          totalGeral={totalGeral}
+          onPress={verificarListaConcluida}
+          ready={pronto}
+          loading={finalizando}
+          listaConcluida={listaConcluida}
+        />
         <BtnAdd onPress={() => setShowModalAdd(true)} />
       </View>
     </SafeAreaView>
