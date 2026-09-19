@@ -23,7 +23,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.losck.listaja",
-      "versionCode": 3
+      "versionCode": 4
     },
     "platforms": [
       "android",
@@ -57,7 +57,7 @@
     },
     "owner": "losck",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/925794d1-8075-4059-8521-152592d63c14"
