@@ -111,14 +111,16 @@ export const adicionarItem = async ({
   nome_item,
   lista_id,
   status_item,
+  order_status,
 }: {
   nome_item: string;
   lista_id: string;
   status_item: string;
+  order_status: number;
 }) => {
   let { data, error } = await supabase
     .from("item")
-    .insert([{ nome_item, lista_id, status_item }]);
+    .insert([{ nome_item, lista_id, status_item, order_status }]);
   return { data, error };
 };
 
@@ -134,7 +136,7 @@ export const UpdateItem = async ({
   quantidade: number;
   valor_item: number;
   idItem: string;
-  status_item: number;
+  status_item: string;
   order_status: number;
 }) => {
   let { data, error } = await supabase
