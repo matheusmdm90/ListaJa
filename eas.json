@@ -10,14 +10,16 @@
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "sua_url_aqui",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sua_chave_aqui"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "sua_url_aqui",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sua_chave_aqui"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
@@ -27,7 +29,8 @@
       "env": {
         "EXPO_PUBLIC_SUPABASE_URL": "https://dumamdqqaurdchjkyfiq.supabase.co",
         "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_pd7JgJLsA0tAA2gm1iH2aQ_VyiBemGa"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {
