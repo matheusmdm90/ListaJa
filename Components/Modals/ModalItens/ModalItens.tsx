@@ -13,6 +13,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
+import { avisoCampoInvalido } from "../../Toast/toast";
+import { toastConfig } from "../../Toast/toastConfig";
 
 interface ModalProps {
   idItem: string;
@@ -45,7 +48,16 @@ const ModalItens = ({
 
   const handleUpdate = async () => {
     // transforma entring em number
+
     setLoading(true);
+
+    if (valor.trim() === "") {
+      setLoading(false);
+
+      avisoCampoInvalido("Digite um valor do Item");
+
+      return;
+    }
     try {
       await onCreate(quantidade, parseFloat(valor.replace(",", ".")), idItem);
     } finally {
@@ -62,6 +74,7 @@ const ModalItens = ({
         visible={visible}
         backdropColor={"#1A1F2E50"}
       >
+        <Toast config={toastConfig} topOffset={10} />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "padding"}
           style={{ flex: 1 }}
