@@ -122,6 +122,7 @@ const useItens = (): useItemretunr => {
       lista_id: idLista,
       nome_item: name,
       status_item: "Item não comprando",
+      order_status: 0,
     });
     if (errorAddItem) {
       throw errorAddItem;
@@ -144,7 +145,7 @@ const useItens = (): useItemretunr => {
         idItem: idItem,
         quantidade: quantidade,
         valor_item: valor,
-        status_item: 1,
+        status_item: "Item comprado",
         order_status: 1,
       });
       if (errorAoAtualizar) {
@@ -182,7 +183,7 @@ const useItens = (): useItemretunr => {
         throw erroDeletarLista;
       }
 
-      router.back();
+      router.push("/Home");
     } catch (erro) {
       erros(erro);
     }
